@@ -5,13 +5,16 @@ using UnityEngine;
 public class BlockController : MonoBehaviour
 {
     public BlockList blockList;
-    public BlockDisplay bDisplay;
+    private BlockDisplay bDisplay;
     public GameObject block;
-    int randomBlock;
+    private GameObject emptyGO;
+    private int randomBlock;
 
     private void Awake()
     {
         bDisplay = FindObjectOfType<BlockDisplay>();
+        emptyGO = new GameObject();
+        emptyGO.name = "Block Container";
     }
 
     public void NextBlock()
@@ -23,5 +26,12 @@ public class BlockController : MonoBehaviour
         {
             block.transform.GetChild(i).transform.position = new Vector2(bDisplay.points[i].x, bDisplay.points[i].y);
         }
+    }
+
+    public void Rotate()
+    {
+        emptyGO.transform.position = bDisplay.center;
+        block.transform.parent = emptyGO.transform;
+        emptyGO.transform.Rotate(0, 0, 90);
     }
 }

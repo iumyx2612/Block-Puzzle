@@ -7,10 +7,11 @@ public class BlockDisplay : MonoBehaviour
     public BlockList blockList;
     public int chosenBlockData;
     public List<Vector2> points = new List<Vector2>();
+    public Vector3 center;
 
     public GameObject piece;
     public List<PieceData> pieceData = new List<PieceData>();
-    public int chosenColor;
+    private int chosenColor;
     // Start is called before the first frame update
     void Awake()
     {
@@ -24,12 +25,18 @@ public class BlockDisplay : MonoBehaviour
             newPiece.GetComponent<PieceDisplay>().LoadData(pieceData[chosenColor]);            
             newPiece.transform.parent = gameObject.transform;
         }
+        Vector3 sumVector = Vector3.zero;
+        foreach (Transform child in gameObject.transform)
+        {
+            sumVector += child.position;
+        }
+        center = sumVector / gameObject.transform.childCount;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //transform.Rotate(new Vector3(0, 0, 3 * Time.deltaTime));
+        
     }
 
     public void LoadData(BlockData data)
