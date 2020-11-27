@@ -6,13 +6,10 @@ public class BlockController : MonoBehaviour
 {
     public BlockList blockList;
     public SpawnPoint spawnPoint;
-    [SerializeField] private GameObject pool;
     [SerializeField] private int amountToPool;
-    public List<GameObject> blocks = new List<GameObject>();
+    private List<GameObject> blocks = new List<GameObject>();
     public GameObject block;
-    private int randomBlock;
-
-    public GameObject blockContainer;
+    private int randomBlock;    
 
     private void Awake()
     {
@@ -77,9 +74,13 @@ public class BlockController : MonoBehaviour
 
     public void Rotate()
     {
-        blockContainer.transform.position = block.GetComponent<BlockDisplay>().center;
-        block.transform.parent = blockContainer.transform;
-        blockContainer.transform.Rotate(0, 0, 90);
+        foreach (GameObject block in blocks)
+        {
+            if(block.activeSelf)
+            {
+                block.transform.Rotate(0, 0, 90);
+            }
+        }
     }
 
 

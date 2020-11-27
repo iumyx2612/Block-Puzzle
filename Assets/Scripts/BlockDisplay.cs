@@ -27,7 +27,6 @@ public class BlockDisplay : MonoBehaviour
 
     void OnEnable()
     {
-        Debug.Log(points.Count);
         for (int i = 0; i < points.Count; i++)
         {
             pieces[i].transform.position = (Vector2)gameObject.transform.position + points[i];
