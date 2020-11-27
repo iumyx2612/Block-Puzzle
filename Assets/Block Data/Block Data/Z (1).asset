@@ -12,4 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6860cb7c11f66e49802645acae78be0, type: 3}
   m_Name: Z (1)
   m_EditorClassIdentifier: 
-  points: []
+  points:
+  - {x: 0, y: -0.5}
+  - {x: 1, y: -0.5}
+  - {x: 0, y: 0.5}
+  - {x: -1, y: 0.5}

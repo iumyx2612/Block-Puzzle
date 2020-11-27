@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class BlockController : MonoBehaviour
 {
-    //public BlockList blockList;
-    //public SpawnPoint spawnPoints;
-    //[SerializeField] private GameObject pool;
-    //[SerializeField] private int amountToPool;
-    //public List<GameObject> blocks = new List<GameObject>();
+    public BlockList blockList;
+    public SpawnPoint spawnPoint;
+    [SerializeField] private GameObject pool;
+    [SerializeField] private int amountToPool;
+    public List<GameObject> blocks = new List<GameObject>();
     public GameObject block;
     private int randomBlock;
 
@@ -16,22 +16,22 @@ public class BlockController : MonoBehaviour
 
     private void Awake()
     {
-        //for (int i = 0; i < amountToPool / spawnPoints.spawnPoints.Count; i++)
-        //{
-        //    for (int j = 0; j < spawnPoints.spawnPoints.Count; j++)
-        //    {
-        //        GameObject newBlock = Instantiate(block, new Vector3(0, 0, 0), Quaternion.identity);
-        //        newBlock.SetActive(false);
-        //        blocks.Add(newBlock);
-        //    }
-        //}
-        //for (int i = 0; i < 3; i++)
-        //{
-        //    randomBlock = Random.Range(0, blockList.blockDatas.Count);
-        //    blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
-        //    blocks[i].SetActive(true);
-        //    blocks[i].transform.position = spawnPoints.spawnPoints[i];
-        //}
+        for (int i = 0; i < amountToPool / spawnPoint.spawnPoints.Count; i++)
+        {
+            for (int j = 0; j < spawnPoint.spawnPoints.Count; j++)
+            {
+                GameObject newBlock = Instantiate(block, new Vector3(0, 0, 0), Quaternion.identity);
+                newBlock.SetActive(false);
+                blocks.Add(newBlock);
+            }
+        }
+        for (int i = 0; i < 3; i++)
+        {
+            randomBlock = Random.Range(0, blockList.blockDatas.Count);
+            blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
+            blocks[i].SetActive(true);
+            blocks[i].transform.position = spawnPoint.spawnPoints[i];
+        }
     }
 
     //public List<GameObject> GetPooledObjects()
@@ -57,37 +57,27 @@ public class BlockController : MonoBehaviour
     //    return pooledBlocks;
     //}
 
-    //public void LoadBlockList()
-    //{
-    //    for (int i = 0; i < 6; i++)
-    //    {
-    //        int count = 0;
-    //        if(count == 3)
-    //        {
-    //            break;
-    //        }
-    //        if(blocks[i].activeSelf)
-    //        {
-    //            blocks[i].SetActive(false);
-    //            Debug.Log("Deact");
-    //        }
-    //        else
-    //        {
-    //            randomBlock = Random.Range(0, blockList.blockDatas.Count);
-    //            blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
-    //            blocks[i].SetActive(true);
-    //            blocks[i].transform.position = spawnPoints.spawnPoints[i % 3];
-    //            //blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
-    //            //Debug.Log(randomBlock);
-    //            //blocks[i].SetActive(true);
-    //            count++;
-    //        }
-    //    }
-    //}
+    public void LoadBlockList()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            if(blocks[i].activeSelf)
+            {
+                blocks[i].SetActive(false);
+            }
+            else
+            {
+                randomBlock = Random.Range(0, blockList.blockDatas.Count);
+                blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
+                blocks[i].SetActive(true);
+                blocks[i].transform.position = spawnPoint.spawnPoints[i % 3];
+            }
+        }
+    }
 
     public void Rotate()
     {
-        blockContainer.transform.position = block.GetComponent<Test>().center;
+        blockContainer.transform.position = block.GetComponent<BlockDisplay>().center;
         block.transform.parent = blockContainer.transform;
         blockContainer.transform.Rotate(0, 0, 90);
     }

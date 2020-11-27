@@ -27,9 +27,10 @@ public class BlockDisplay : MonoBehaviour
 
     void OnEnable()
     {
+        Debug.Log(points.Count);
         for (int i = 0; i < points.Count; i++)
         {
-            pieces[i].transform.position = points[i];
+            pieces[i].transform.position = (Vector2)gameObject.transform.position + points[i];
             pieces[i].GetComponent<PieceDisplay>().LoadData(pieceData[chosenColor]);
             pieces[i].SetActive(true);
         }
@@ -37,7 +38,12 @@ public class BlockDisplay : MonoBehaviour
 
     private void OnDisable()
     {
-        //points.Clear();
+        for (int i = 0; i < points.Count; i++)
+        {
+            pieces[i].transform.position = Vector2.zero;
+            pieces[i].SetActive(false);
+        }
+        points.Clear();
     }
 
     // Update is called once per frame
@@ -53,8 +59,10 @@ public class BlockDisplay : MonoBehaviour
 
     public void LoadData(int data)
     {
-        points = blockList.blockDatas[data].points;
-        Debug.Log(points.Count);
+        for (int i = 0; i < blockList.blockDatas[data].points.Count; i++)
+        {
+            points.Add(blockList.blockDatas[data].points[i]);
+        }
         chosenColor = Random.Range(0, pieceData.Count);
     }    
 }

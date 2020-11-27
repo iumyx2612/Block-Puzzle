@@ -10,6 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b6860cb7c11f66e49802645acae78be0, type: 3}
-  m_Name: Goc Vuong To
+  m_Name: Goc Vuong
   m_EditorClassIdentifier: 
-  points: []
+  points:
+  - {x: 0.33333334, y: -0.33333334}
+  - {x: -0.6666667, y: -0.33333334}
+  - {x: 0.33333334, y: 0.6666667}
