@@ -4,34 +4,93 @@ using UnityEngine;
 
 public class BlockController : MonoBehaviour
 {
-    public BlockList blockList;
-    private BlockDisplay bDisplay;
+    //public BlockList blockList;
+    //public SpawnPoint spawnPoints;
+    //[SerializeField] private GameObject pool;
+    //[SerializeField] private int amountToPool;
+    //public List<GameObject> blocks = new List<GameObject>();
     public GameObject block;
-    private GameObject emptyGO;
     private int randomBlock;
+
+    public GameObject blockContainer;
 
     private void Awake()
     {
-        bDisplay = FindObjectOfType<BlockDisplay>();
-        emptyGO = new GameObject();
-        emptyGO.name = "Block Container";
+        //for (int i = 0; i < amountToPool / spawnPoints.spawnPoints.Count; i++)
+        //{
+        //    for (int j = 0; j < spawnPoints.spawnPoints.Count; j++)
+        //    {
+        //        GameObject newBlock = Instantiate(block, new Vector3(0, 0, 0), Quaternion.identity);
+        //        newBlock.SetActive(false);
+        //        blocks.Add(newBlock);
+        //    }
+        //}
+        //for (int i = 0; i < 3; i++)
+        //{
+        //    randomBlock = Random.Range(0, blockList.blockDatas.Count);
+        //    blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
+        //    blocks[i].SetActive(true);
+        //    blocks[i].transform.position = spawnPoints.spawnPoints[i];
+        //}
     }
 
-    public void NextBlock()
-    {
-        randomBlock = Random.Range(0, blockList.blockDatas.Count);
-        bDisplay.chosenBlockData = randomBlock;
-        bDisplay.LoadData(blockList.blockDatas[bDisplay.chosenBlockData]);
-        for (int i = 0; i < block.transform.childCount; i++)
-        {
-            block.transform.GetChild(i).transform.position = new Vector2(bDisplay.points[i].x, bDisplay.points[i].y);
-        }
-    }
+    //public List<GameObject> GetPooledObjects()
+    //{
+    //    List<GameObject> pooledBlocks = new List<GameObject>();
+    //    for (int i = 0; i < blocks.Count; i++)
+    //    {
+    //        if(!blocks[i].activeSelf)
+    //        {
+    //            pooledBlocks.Add(blocks[i]);
+    //        }
+    //    }
+    //    if(pooledBlocks.Count == 0)
+    //    {
+    //        for (int i = 0; i < spawnPoints.spawnPoints.Count; i++)
+    //        {
+    //            GameObject newBlock = Instantiate(block, spawnPoints.spawnPoints[i], Quaternion.identity);
+    //            blocks.Add(newBlock);
+    //            pooledBlocks.Add(newBlock);
+    //            newBlock.SetActive(false);
+    //        }
+    //    }
+    //    return pooledBlocks;
+    //}
+
+    //public void LoadBlockList()
+    //{
+    //    for (int i = 0; i < 6; i++)
+    //    {
+    //        int count = 0;
+    //        if(count == 3)
+    //        {
+    //            break;
+    //        }
+    //        if(blocks[i].activeSelf)
+    //        {
+    //            blocks[i].SetActive(false);
+    //            Debug.Log("Deact");
+    //        }
+    //        else
+    //        {
+    //            randomBlock = Random.Range(0, blockList.blockDatas.Count);
+    //            blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
+    //            blocks[i].SetActive(true);
+    //            blocks[i].transform.position = spawnPoints.spawnPoints[i % 3];
+    //            //blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
+    //            //Debug.Log(randomBlock);
+    //            //blocks[i].SetActive(true);
+    //            count++;
+    //        }
+    //    }
+    //}
 
     public void Rotate()
     {
-        emptyGO.transform.position = bDisplay.center;
-        block.transform.parent = emptyGO.transform;
-        emptyGO.transform.Rotate(0, 0, 90);
+        blockContainer.transform.position = block.GetComponent<Test>().center;
+        block.transform.parent = blockContainer.transform;
+        blockContainer.transform.Rotate(0, 0, 90);
     }
+
+
 }
