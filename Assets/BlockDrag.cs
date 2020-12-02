@@ -5,11 +5,11 @@ using UnityEngine;
 public class BlockDrag : MonoBehaviour
 {
     public bool check;
-    private Vector3 oldPos;
+    public Vector3 oldPos;
 
-    private void Awake()
+    private void Start()
     {
-        oldPos = transform.parent.position;
+        
     }
 
     private void OnMouseDrag()
@@ -24,7 +24,6 @@ public class BlockDrag : MonoBehaviour
         {
             if(!check)
             {
-                Debug.Log("Not check");
                 transform.parent.position = oldPos;
             }
         }

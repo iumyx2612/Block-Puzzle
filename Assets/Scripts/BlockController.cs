@@ -42,6 +42,10 @@ public class BlockController : MonoBehaviour
             blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
             blocks[i].SetActive(true);
             blocks[i].transform.position = spawnPoint.spawnPoints[i];
+            foreach (Transform child in blocks[i].transform)
+            {
+                child.GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
+            }
         }
     }
 
@@ -82,6 +86,10 @@ public class BlockController : MonoBehaviour
                 blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
                 blocks[i].SetActive(true);
                 blocks[i].transform.position = spawnPoint.spawnPoints[i % 3];
+                foreach (Transform child in blocks[i].transform)
+                {
+                    child.GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
+                }
             }
         }
     }
