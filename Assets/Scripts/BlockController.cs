@@ -12,6 +12,7 @@ public class BlockController : MonoBehaviour
     [SerializeField] private int amountToPool;
     private List<GameObject> blocks = new List<GameObject>();
     public GameObject block;
+    [SerializeField] private GameObject blockContainer;
     private int randomBlock;
     
     private void OnEnable()
@@ -42,6 +43,7 @@ public class BlockController : MonoBehaviour
             blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
             blocks[i].SetActive(true);
             blocks[i].transform.position = spawnPoint.spawnPoints[i];
+            blocks[i].transform.parent = blockContainer.transform; 
             foreach (Transform child in blocks[i].transform)
             {
                 child.GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
@@ -86,6 +88,7 @@ public class BlockController : MonoBehaviour
                 blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
                 blocks[i].SetActive(true);
                 blocks[i].transform.position = spawnPoint.spawnPoints[i % 3];
+                blocks[i].transform.parent = blockContainer.transform;
                 foreach (Transform child in blocks[i].transform)
                 {
                     child.GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
