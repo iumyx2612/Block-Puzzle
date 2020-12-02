@@ -43,11 +43,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfa4a0fabab50e04dbce13f66c2f4e46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPoint: {fileID: 11400000, guid: 2066f250f895b6d4aa6b15b76b15503e, type: 2}
   blockList: {fileID: 11400000, guid: d94d358af3c66134c84ee1a259679aea, type: 2}
-  chosenBlockData: 0
   points: []
   center: {x: 0, y: 0, z: 0}
+  pieces: []
   piece: {fileID: 1728168908405714168, guid: b39a6e87d01c0104496a5bfd20b7a5ac, type: 3}
   pieceData:
   - {fileID: 11400000, guid: b3d3b75588f68af4f87175f01e4900e4, type: 2}

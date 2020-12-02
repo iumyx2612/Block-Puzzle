@@ -1,18 +1,32 @@
-﻿using System.Collections;
+﻿using ScriptableObjectArchitecture;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BlockController : MonoBehaviour
 {
+    public GameEvent rotate;
+    public GameEvent nextpuzzle;
     public BlockList blockList;
     public SpawnPoint spawnPoint;
     [SerializeField] private int amountToPool;
     private List<GameObject> blocks = new List<GameObject>();
     public GameObject block;
-    private int randomBlock;    
+    private int randomBlock;
+    
+    private void OnEnable()
+    {
+        rotate.AddListener(Rotate);
+        nextpuzzle.AddListener(LoadBlockList);
+    }
+    private void OnDisable()
+    {
+        rotate.RemoveListener(Rotate);
+        nextpuzzle.RemoveListener(LoadBlockList);
+    }
 
     private void Awake()
-    {
+    {      
         for (int i = 0; i < amountToPool / spawnPoint.spawnPoints.Count; i++)
         {
             for (int j = 0; j < spawnPoint.spawnPoints.Count; j++)

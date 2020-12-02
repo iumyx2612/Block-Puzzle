@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BlockDisplay : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class BlockDisplay : MonoBehaviour
 
     private void Awake()
     {
+        LoadData(0);
         for (int i = 0; i < preloadPieces; i++)
         {
             GameObject newPiece = Instantiate(piece, transform);

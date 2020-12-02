@@ -21,5 +21,6 @@ public class PieceDisplay : MonoBehaviour
     public void LoadData(PieceData data)
     {
         sR.sprite = data.sprite;
+        gameObject.AddComponent<BoxCollider2D>();
     }
 }

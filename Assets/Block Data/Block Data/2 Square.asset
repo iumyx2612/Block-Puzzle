@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: 2 Square
   m_EditorClassIdentifier: 
   points:
-  - {x: 0.5, y: 0}
   - {x: -0.5, y: 0}
+  - {x: 0.5, y: 0}
