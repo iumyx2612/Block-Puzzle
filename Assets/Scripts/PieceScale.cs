@@ -5,10 +5,10 @@ using UnityEngine;
 public class PieceScale : MonoBehaviour
 {
     public SpriteRenderer sR;
-    public float desiredX = 1f;
-    public float desiredY = 1f;
-    public float XscaleFactor;
-    public float YscaleFactor;
+    public float desiredX;
+    public float desiredY;
+    private float XscaleFactor;
+    private float YscaleFactor;
     // Start is called before the first frame update
     void Start()
     {

@@ -8,6 +8,9 @@ public class BlockDisplay : MonoBehaviour
     public BlockList blockList;
     public List<Vector2> points = new List<Vector2>();
     public Vector3 center;
+    [SerializeField] private bool activeState;
+    private Vector2 defaultScaleSize = new Vector2(0.3f, 0.3f);
+    [SerializeField] Vector2 dragScaleSize = new Vector2(0.65f, 0.65f);
 
     private int preloadPieces = 9;
     public List<GameObject> pieces = new List<GameObject>();
@@ -35,6 +38,7 @@ public class BlockDisplay : MonoBehaviour
             pieces[i].GetComponent<PieceDisplay>().LoadData(pieceData[chosenColor]);
             pieces[i].SetActive(true);
         }
+        gameObject.transform.localScale = new Vector2(0.3f, 0.3f);
     }
 
     private void OnDisable()
@@ -44,6 +48,7 @@ public class BlockDisplay : MonoBehaviour
             pieces[i].transform.position = Vector2.zero;
             pieces[i].SetActive(false);
         }
+        gameObject.transform.localScale = new Vector2(1f, 1f);
         points.Clear();
     }
 
@@ -56,6 +61,15 @@ public class BlockDisplay : MonoBehaviour
             sumVector += child.position;
         }
         center = sumVector / gameObject.transform.childCount;
+        activeState = gameObject.transform.GetChild(0).GetComponent<BlockDrag>().isActive;
+        if(activeState)
+        {
+            gameObject.transform.localScale = dragScaleSize;
+        }
+        else
+        {
+            gameObject.transform.localScale = defaultScaleSize;
+        }
     }
 
     public void LoadData(int data)

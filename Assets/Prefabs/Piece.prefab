@@ -100,8 +100,6 @@ MonoBehaviour:
   sR: {fileID: 1728168908405714174}
   desiredX: 1
   desiredY: 1
-  XscaleFactor: 0
-  YscaleFactor: 0
 --- !u!114 &1728168908405714172
 MonoBehaviour:
   m_ObjectHideFlags: 0
