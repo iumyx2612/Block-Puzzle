@@ -43,36 +43,14 @@ public class BlockController : MonoBehaviour
             blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
             blocks[i].SetActive(true);
             blocks[i].transform.position = spawnPoint.spawnPoints[i];
-            blocks[i].transform.parent = blockContainer.transform; 
-            foreach (Transform child in blocks[i].transform)
-            {
-                child.GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
-            }
+            blocks[i].transform.parent = blockContainer.transform;
+            blocks[i].GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
+            //foreach (Transform child in blocks[i].transform)
+            //{
+            //    child.GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
+            //}
         }
     }
-
-    //public List<GameObject> GetPooledObjects()
-    //{
-    //    List<GameObject> pooledBlocks = new List<GameObject>();
-    //    for (int i = 0; i < blocks.Count; i++)
-    //    {
-    //        if(!blocks[i].activeSelf)
-    //        {
-    //            pooledBlocks.Add(blocks[i]);
-    //        }
-    //    }
-    //    if(pooledBlocks.Count == 0)
-    //    {
-    //        for (int i = 0; i < spawnPoints.spawnPoints.Count; i++)
-    //        {
-    //            GameObject newBlock = Instantiate(block, spawnPoints.spawnPoints[i], Quaternion.identity);
-    //            blocks.Add(newBlock);
-    //            pooledBlocks.Add(newBlock);
-    //            newBlock.SetActive(false);
-    //        }
-    //    }
-    //    return pooledBlocks;
-    //}
 
     public void LoadBlockList()
     {
@@ -89,10 +67,11 @@ public class BlockController : MonoBehaviour
                 blocks[i].SetActive(true);
                 blocks[i].transform.position = spawnPoint.spawnPoints[i % 3];
                 blocks[i].transform.parent = blockContainer.transform;
-                foreach (Transform child in blocks[i].transform)
-                {
-                    child.GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
-                }
+                blocks[i].GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
+                //foreach (Transform child in blocks[i].transform)
+                //{
+                //    child.GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
+                //}
             }
         }
     }

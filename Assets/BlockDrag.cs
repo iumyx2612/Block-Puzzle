@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ScriptableObjectArchitecture;
 
 public class BlockDrag : MonoBehaviour
 {
-    public bool check;
+    public BoolReference check;
+    private bool onPoint = false;
     public Vector3 oldPos;
     public bool isActive = false;
 
@@ -13,26 +15,55 @@ public class BlockDrag : MonoBehaviour
         
     }
 
-    private void OnMouseDrag()
+    private void Drag()
     {
-        Vector3 newPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, +10f));
-        transform.parent.position = newPos;
-        isActive = true;
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            Vector2 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
+            switch(touch.phase)
+            {
+                case TouchPhase.Began:
+                    if(gameObject.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(touchPos))
+                    {
+                        onPoint = true;
+                        isActive = true;
+                    }
+                    break;
+                case TouchPhase.Moved:
+                    if(gameObject.GetComponent<BoxCollider2D>() == Physics2D.OverlapPoint(touchPos) 
+                        && onPoint)
+                    {
+                        transform.position = touchPos;
+                    }
+                    break;
+                case TouchPhase.Ended:
+                    onPoint = false;
+                    isActive = false;
+                    break;
+            }
+        }
+    }
+
+    public void Check()
+    {
+        
     }
 
     private void Update()
     {
-        if(Input.GetMouseButtonUp(0))
-        {
-            if(!check)
-            {
-                transform.parent.position = oldPos;
-                isActive = false;
-            }
-            else
-            {
-                isActive = true;
-            }
-        }
+        Drag();
+        //if(Input.GetMouseButtonUp(0))
+        //{
+        //    if(!check)
+        //    {
+        //        transform.position = oldPos;
+        //        isActive = false;
+        //    }
+        //    else
+        //    {
+        //        isActive = true;
+        //    }
+        //}
     }
 }

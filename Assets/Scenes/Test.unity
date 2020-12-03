@@ -128,11 +128,23 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5686473859066925407, guid: c9cd3bdb67cf9a0448cc44c000c37104,
+        type: 3}
+      propertyPath: check._variable
+      value: 
+      objectReference: {fileID: 11400000, guid: 3721003d160df8f43bda5c05cbce354c,
+        type: 2}
     - target: {fileID: 2006191141287871186, guid: c9cd3bdb67cf9a0448cc44c000c37104,
         type: 3}
       propertyPath: m_Name
       value: Block
       objectReference: {fileID: 0}
+    - target: {fileID: 2006191141287871187, guid: c9cd3bdb67cf9a0448cc44c000c37104,
+        type: 3}
+      propertyPath: dataList
+      value: 
+      objectReference: {fileID: 11400000, guid: 0f8033385ef5aa640b3914564a272cce,
+        type: 2}
     - target: {fileID: 2006191141287871188, guid: c9cd3bdb67cf9a0448cc44c000c37104,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -188,6 +200,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5596180155826692551, guid: c9cd3bdb67cf9a0448cc44c000c37104,
+        type: 3}
+      propertyPath: _previouslyRegisteredEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 3721003d160df8f43bda5c05cbce354c,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c9cd3bdb67cf9a0448cc44c000c37104, type: 3}
 --- !u!1 &829219289

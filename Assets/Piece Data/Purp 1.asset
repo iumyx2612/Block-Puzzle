@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3d173a71e01c4f458065cc2874165c0, type: 3}
-  m_Name: Red
+  m_Name: Purp 1
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 139766e14ed6bbf4284954c6138a36b4, type: 3}
+  sprite: {fileID: 21300000, guid: 696a9a4cc456f8a43a7183a4c05881ef, type: 3}

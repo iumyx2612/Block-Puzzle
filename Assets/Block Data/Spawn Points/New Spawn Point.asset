@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: New Spawn Point
   m_EditorClassIdentifier: 
   spawnPoints:
-  - {x: 0, y: 0}
-  - {x: 3, y: 0}
-  - {x: -3, y: 0}
+  - {x: -2.2, y: -4.8}
+  - {x: 0, y: -4.8}
+  - {x: 2.2, y: -4.8}

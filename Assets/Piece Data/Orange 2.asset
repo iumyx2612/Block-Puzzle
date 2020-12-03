@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d173a71e01c4f458065cc2874165c0, type: 3}
   m_Name: Orange 2
   m_EditorClassIdentifier: 
-  sprite: {fileID: 0}
+  sprite: {fileID: 21300000, guid: 3506fdf66d9cbe4478e511014ef4a7f0, type: 3}
