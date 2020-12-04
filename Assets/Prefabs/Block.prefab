@@ -95,6 +95,9 @@ MonoBehaviour:
     _variable: {fileID: 11400000, guid: 3721003d160df8f43bda5c05cbce354c, type: 2}
   oldPos: {x: 0, y: 0, z: 0}
   isActive: 0
+  ground: {fileID: 0}
+  g_collider: {fileID: 0}
+  offset: {x: 0, y: 0}
 --- !u!114 &5596180155826692551
 MonoBehaviour:
   m_ObjectHideFlags: 0

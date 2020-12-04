@@ -14,6 +14,7 @@ public class BlockController : MonoBehaviour
     public GameObject block;
     [SerializeField] private GameObject blockContainer;
     private int randomBlock;
+
     
     private void OnEnable()
     {

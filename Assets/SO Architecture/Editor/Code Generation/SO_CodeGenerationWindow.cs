@@ -25,9 +25,9 @@ namespace ScriptableObjectArchitecture.Editor
 
         private readonly bool[,] _dependencyGraph = new bool[SO_CodeGenerator.TYPE_COUNT, SO_CodeGenerator.TYPE_COUNT]
         {
-            { false, true, false, false, true, false, },
-            { false, false, true, false, false, false, },
-            { false, false, false, false, false, true, },
+            { false, false, false, false, false, false, },
+            { false, false, false, false, false, false, },
+            { false, false, false, false, false, false, },
             { false, false, false, false, false, false, },
             { false, false, false, false, false, false, },
             { false, false, false, false, false, false, },

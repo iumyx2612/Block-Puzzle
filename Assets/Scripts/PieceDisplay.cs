@@ -20,6 +20,8 @@ public class PieceDisplay : MonoBehaviour
 
     public void LoadData(PieceData data)
     {
+        if (data == null) return;
         sR.sprite = data.sprite;
+        this.data = data;
     }
 }
