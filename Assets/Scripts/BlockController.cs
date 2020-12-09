@@ -7,6 +7,8 @@ public class BlockController : MonoBehaviour
 {
     public GameEvent rotate;
     public GameEvent nextpuzzle;
+    public GameEvent check;
+
     public BlockList blockList;
     public SpawnPoint spawnPoint;
     [SerializeField] private int amountToPool;
@@ -14,7 +16,9 @@ public class BlockController : MonoBehaviour
     public GameObject block;
     [SerializeField] private GameObject blockContainer;
     private int randomBlock;
+    private int amount_of_active_blocks = 3;
 
+    public Vector2Reference tempPos;
     
     private void OnEnable()
     {
@@ -28,12 +32,13 @@ public class BlockController : MonoBehaviour
     }
 
     private void Awake()
-    {      
+    {
         for (int i = 0; i < amountToPool / spawnPoint.spawnPoints.Count; i++)
         {
             for (int j = 0; j < spawnPoint.spawnPoints.Count; j++)
             {
-                GameObject newBlock = Instantiate(block, new Vector3(0, 0, 0), Quaternion.identity);
+                GameObject newBlock = Instantiate(block, spawnPoint.spawnPoints[j], Quaternion.identity);
+                newBlock.GetComponent<BlockDrag>().oldPos = newBlock.transform.position;
                 newBlock.SetActive(false);
                 blocks.Add(newBlock);
             }
@@ -57,7 +62,7 @@ public class BlockController : MonoBehaviour
     {
         for (int i = 0; i < 6; i++)
         {
-            if(blocks[i].activeSelf)
+            if (blocks[i].activeSelf)
             {
                 blocks[i].SetActive(false);
             }
@@ -67,7 +72,10 @@ public class BlockController : MonoBehaviour
                 blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
                 blocks[i].SetActive(true);
                 blocks[i].transform.position = spawnPoint.spawnPoints[i % 3];
-                blocks[i].transform.parent = blockContainer.transform;
+                if(blocks[i].transform.parent == null)
+                {
+                    blocks[i].transform.parent = blockContainer.transform;
+                }
                 blocks[i].GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
                 //foreach (Transform child in blocks[i].transform)
                 //{
@@ -81,12 +89,15 @@ public class BlockController : MonoBehaviour
     {
         foreach (GameObject block in blocks)
         {
-            if(block.activeSelf)
+            if (block.activeSelf)
             {
                 block.transform.Rotate(0, 0, 90);
+                for (int i = 0; i < block.GetComponent<BlockDisplay>().points.Count; i++)
+                {
+                    block.GetComponent<BlockDisplay>().points[i] =
+                        new Vector2(-block.GetComponent<BlockDisplay>().points[i].y, block.GetComponent<BlockDisplay>().points[i].x);
+                }
             }
         }
     }
-
-
 }

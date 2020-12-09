@@ -5,27 +5,30 @@ using UnityEngine;
 
 public class PlayFieldSetUp : MonoBehaviour
 {
-    [SerializeField] private int num_of_squares = 64;
     [SerializeField] private float xDist;
     [SerializeField] private float yDist;
     [SerializeField] private GameObject squareField;
-    public List<TileObject> tileList = new List<TileObject>();
+    private List<TileObject> tileList = new List<TileObject>();
     public float xSquareField;
     public float ySquareField;
     public GameObject greenArea;
     [SerializeField] private Vector2 position;
     [SerializeField] private Vector2 basePosition;
     [SerializeField] private float pieceDistScale;
-    public BlockDragGameEvent eventListen;
+
+    public BlockDragGameEvent dragListen;
+    public List<TileObject> tileToCheck = new List<TileObject>();
     
     private void OnEnable()
     {
-        eventListen.AddListener(Check);
+        dragListen.AddListener(Check);
+        //hoverListen.AddListener(Hover);
     }
 
     private void OnDisable()
     {
-        eventListen.RemoveListener(Check);
+        dragListen.RemoveListener(Check);
+        //hoverListen.RemoveListener(Hover);
     }
 
     public TileObject tim(Vector2 pos)
@@ -48,20 +51,18 @@ public class PlayFieldSetUp : MonoBehaviour
             GameObject ground = tileList[i].gameObject;
             if(ground.GetComponent<BoxCollider2D>().bounds.Contains(basePiece.transform.position))
             {
-                List<TileObject> tileToCheck = new List<TileObject>();
                 tileToCheck.Add(tileList[i]);
                 for (int j = 1; j < drag.gameObject.GetComponent<BlockDisplay>().points.Count; j++)
                 {
                     Vector2 tempPoint = drag.gameObject.GetComponent<BlockDisplay>().points[j];
                     Vector2 pointToCheck = tileList[i].position + tempPoint;
-                    Debug.Log("Point to check:" + pointToCheck);
                     TileObject tile = tim(pointToCheck);
-                    if(tile!=null)
+                    if (tile != null && !tileToCheck.Contains(tile))
                     {
                         tileToCheck.Add(tile);
                     }
                 }
-                if(tileToCheck.Count > 0)
+                if (tileToCheck.Count > 0)
                 {
                     int checkAmount = 0;
                     foreach (TileObject tile in tileToCheck)
@@ -70,12 +71,12 @@ public class PlayFieldSetUp : MonoBehaviour
                         {
                             checkAmount++;
                         }
-                        if(checkAmount >= drag.gameObject.transform.GetComponent<BlockDisplay>().activeChild)
+                        if (checkAmount >= drag.gameObject.transform.GetComponent<BlockDisplay>().activeChild)
                         {
                             drag.gameObject.GetComponent<BlockDrag>().check = true;
                         }
                     }
-                    if(drag.gameObject.GetComponent<BlockDrag>().check)
+                    if (drag.gameObject.GetComponent<BlockDrag>().check)
                     {
                         foreach (TileObject tile in tileToCheck)
                         {
@@ -88,8 +89,7 @@ public class PlayFieldSetUp : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         Vector2 topLeft = new Vector2(greenArea.transform.position.x - greenArea.GetComponent<SpriteRenderer>().size.x/2,
             greenArea.transform.position.y + greenArea.GetComponent<SpriteRenderer>().size.y/2);
@@ -97,11 +97,14 @@ public class PlayFieldSetUp : MonoBehaviour
         ySquareField = squareField.GetComponent<BoxCollider2D>().size.y / 2;
         basePosition = topLeft + new Vector2(xSquareField + 0.1f, -ySquareField - 0.1f);
         position = basePosition;
+        int square_number = 0;
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
             {
                 GameObject newSquare = Instantiate(squareField, transform);
+                square_number++;
+                newSquare.name = "Square" + square_number;
                 TileObject temp = newSquare.GetComponent<TileObject>();
                 tileList.Add(temp);                
                 newSquare.transform.position = position;

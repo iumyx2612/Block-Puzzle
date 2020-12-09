@@ -4190,6 +4190,9 @@ MonoBehaviour:
   greenArea: {fileID: 1036247915}
   position: {x: 0.4, y: 0.4}
   basePosition: {x: -0.349, y: -0.095}
+  pieceDistScale: 0
+  eventListen: {fileID: 11400000, guid: 5cde64b6833f07343a1489acea0ef969, type: 2}
+  nextBlock: {fileID: 11400000, guid: 6aba62193ffc3524fb00dd86fc5d7a28, type: 2}
 --- !u!1 &1139169745
 GameObject:
   m_ObjectHideFlags: 0
@@ -7250,6 +7253,12 @@ PrefabInstance:
       propertyPath: blockContainer
       value: 
       objectReference: {fileID: 61186503}
+    - target: {fileID: 5256552928848480189, guid: 21bf00cc731e6934bb16753f87b57beb,
+        type: 3}
+      propertyPath: check
+      value: 
+      objectReference: {fileID: 11400000, guid: 6aba62193ffc3524fb00dd86fc5d7a28,
+        type: 2}
     - target: {fileID: 5256552928848480194, guid: 21bf00cc731e6934bb16753f87b57beb,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ScriptableObjectArchitecture;
+using DG.Tweening;
 
 public class BlockDrag : MonoBehaviour
 {
+    public BlockList blockList;
     private bool onPoint = false;
     public Vector3 oldPos;
-    private Vector2 defaultScaleSize = new Vector2(0.65f, 0.65f);
+    private Vector2 defaultScaleSize = new Vector2(0.5f, 0.5f);
     [SerializeField] Vector2 dragScaleSize = new Vector2(1f, 1f);
     public BlockDragGameEvent drag;
+    public BlockDragGameEvent accept;
+    public BlockDragGameEvent hover;
+    public bool hovering = false;
     public bool check = false;
 
     private void Start()
@@ -27,6 +32,7 @@ public class BlockDrag : MonoBehaviour
                 case UnityEngine.TouchPhase.Began:
                     if (gameObject.GetComponent<BoxCollider2D>().bounds.Contains(touch.pos))
                     {
+                        //tempPos = (Vector2)gameObject.transform.position;
                         onPoint = true;
                         gameObject.transform.localScale = dragScaleSize;
                     }
@@ -36,16 +42,26 @@ public class BlockDrag : MonoBehaviour
                     {
                         gameObject.transform.localScale = dragScaleSize;
                         transform.position = touch.pos;
-                        drag.Raise(this);
-                    }
-                    if(check)
-                    {
-                        Destroy(gameObject);
                     }
                     break;
                 case UnityEngine.TouchPhase.Ended:
+                    drag.Raise(this);
+                    if (!check)
+                    {
+                        transform.DOMove(oldPos, 0.2f);
+                        //transform.position = oldPos;
+                    }
+                    else
+                    {
+                        gameObject.SetActive(false);
+                        gameObject.transform.position = oldPos;
+                        int random = Random.Range(0, blockList.blockDatas.Count);
+                        gameObject.GetComponent<BlockDisplay>().LoadData(random);
+                        gameObject.SetActive(true);
+                    }
                     onPoint = false;
                     gameObject.transform.localScale = defaultScaleSize;
+                    check = false;
                     break;
             }
         }

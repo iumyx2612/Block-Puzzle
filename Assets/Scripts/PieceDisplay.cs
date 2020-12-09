@@ -7,6 +7,10 @@ public class PieceDisplay : MonoBehaviour
     public PieceData data;
     public SpriteRenderer sR;
     // Start is called before the first frame update
+    private void OnEnable()
+    {
+        //Debug.Log(transform.position);
+    }
     void Start()
     {
 

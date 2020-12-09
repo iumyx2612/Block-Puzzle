@@ -8,9 +8,10 @@ public class BlockDisplay : MonoBehaviour
 {
     public BlockList blockList;
     public List<Vector2> points = new List<Vector2>();
-    private Vector3 center;
+    public Vector3 center;
+    public Vector2 offset;
 
-    [SerializeField] private float pieceDistScale;
+    [SerializeField] public float pieceDistScale;
     private int preloadPieces = 9;
     private List<GameObject> pieces = new List<GameObject>();
     public GameObject piece;
@@ -22,7 +23,7 @@ public class BlockDisplay : MonoBehaviour
 
     private void Awake()
     {
-        LoadData(13);
+        LoadData(11);
         for (int i = 0; i < preloadPieces; i++)
         {
             GameObject newPiece = Instantiate(piece, transform);
@@ -35,11 +36,11 @@ public class BlockDisplay : MonoBehaviour
     {
         for (int i = 0; i < points.Count; i++)
         {
-            pieces[i].transform.position = (Vector2)gameObject.transform.position + pieceDistScale * points[i];
+            pieces[i].transform.position = (Vector2)gameObject.transform.position + pieceDistScale * (points[i] + offset);
             pieces[i].GetComponent<PieceDisplay>().LoadData(dataList.pieceDataList[chosenColor]);
             pieces[i].SetActive(true);
         }
-        gameObject.transform.localScale = new Vector2(0.3f, 0.3f);
+        gameObject.transform.localScale = new Vector2(0.5f, 0.5f);
         foreach (Transform child in transform)
         {
             if(child.gameObject.activeSelf)
@@ -53,7 +54,7 @@ public class BlockDisplay : MonoBehaviour
     {
         for (int i = 0; i < points.Count; i++)
         {
-            pieces[i].transform.position = Vector2.zero;
+            pieces[i].transform.localPosition = Vector2.zero;
             pieces[i].SetActive(false);
         }
         gameObject.transform.localScale = new Vector2(1f, 1f);
@@ -69,7 +70,7 @@ public class BlockDisplay : MonoBehaviour
         {
             sumVector += child.position;
         }
-        center = sumVector / gameObject.transform.childCount;        
+        center = sumVector / gameObject.transform.childCount;
     }
 
     public void LoadData(int data)
@@ -78,6 +79,7 @@ public class BlockDisplay : MonoBehaviour
         {
             points.Add(blockList.blockDatas[data].points[i]);
         }
+        offset = blockList.blockDatas[data].offset;
         chosenColor = Random.Range(0, dataList.pieceDataList.Count);
     }
 }

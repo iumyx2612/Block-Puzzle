@@ -12,11 +12,10 @@ GameObject:
   - component: {fileID: 6707635176901689757}
   - component: {fileID: 2006191141287871187}
   - component: {fileID: -5686473859066925407}
-  - component: {fileID: 5596180155826692551}
   m_Layer: 8
   m_Name: Block
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -27,7 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2006191141287871186}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -73,10 +72,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockList: {fileID: 11400000, guid: d94d358af3c66134c84ee1a259679aea, type: 2}
-  activeState: 0
-  dragScaleSize: {x: 0.65, y: 0.65}
+  points: []
+  center: {x: 0, y: 0, z: 0}
+  offset: {x: 0, y: 0}
+  pieceDistScale: 0.68
   piece: {fileID: 1728168908405714168, guid: b39a6e87d01c0104496a5bfd20b7a5ac, type: 3}
   dataList: {fileID: 11400000, guid: 0f8033385ef5aa640b3914564a272cce, type: 2}
+  activeChild: 0
 --- !u!114 &-5686473859066925407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,44 +91,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b93922b26fd5ec4ea9bdeb3faeccd39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  check:
-    _useConstant: 0
-    _constantValue: 0
-    _variable: {fileID: 11400000, guid: 3721003d160df8f43bda5c05cbce354c, type: 2}
+  blockList: {fileID: 11400000, guid: d94d358af3c66134c84ee1a259679aea, type: 2}
   oldPos: {x: 0, y: 0, z: 0}
-  isActive: 0
-  ground: {fileID: 0}
-  g_collider: {fileID: 0}
-  offset: {x: 0, y: 0}
---- !u!114 &5596180155826692551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2006191141287871186}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5758ca93461aeeb4589456a052b07d74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _showDebugFields: 0
-  _enableGizmoDebugging: 1
-  _debugColor: {r: 0, g: 1, b: 1, a: 1}
-  _previouslyRegisteredEvent: {fileID: 11400000, guid: 3721003d160df8f43bda5c05cbce354c,
-    type: 2}
-  _event: {fileID: 11400000, guid: 3721003d160df8f43bda5c05cbce354c, type: 2}
-  _response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: -5686473859066925407}
-        m_MethodName: Check
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  dragScaleSize: {x: 1, y: 1}
+  drag: {fileID: 11400000, guid: 5cde64b6833f07343a1489acea0ef969, type: 2}
+  hover: {fileID: 11400000, guid: 9fff3ecb613488a43809f05263017f14, type: 2}
+  check: 0
