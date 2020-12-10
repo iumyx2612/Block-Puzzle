@@ -13,9 +13,9 @@ public class BlockDrag : MonoBehaviour
     [SerializeField] Vector2 dragScaleSize = new Vector2(1f, 1f);
 
     public BlockDragGameEvent drag;
+    public BlockDragGameEvent place;
     public Vector2 curPos;
     public Vector2 lastPos;
-    public BlockDragGameEvent hover;
     public bool hovering = false;
     public bool check = false;
 
@@ -34,7 +34,6 @@ public class BlockDrag : MonoBehaviour
                 case UnityEngine.TouchPhase.Began:
                     if (gameObject.GetComponent<BoxCollider2D>().bounds.Contains(touch.pos))
                     {
-                        //tempPos = (Vector2)gameObject.transform.position;
                         onPoint = true;
                         gameObject.transform.localScale = dragScaleSize;
                     }
@@ -45,12 +44,10 @@ public class BlockDrag : MonoBehaviour
                         gameObject.transform.localScale = dragScaleSize;
                         transform.position = touch.pos;
                         curPos = transform.position;
-                        hover.Raise(this);
-                        Debug.Log(hovering);
+                        drag.Raise(this);
                     }
                     break;
                 case UnityEngine.TouchPhase.Ended:
-                    drag.Raise(this);
                     if (!check)
                     {
                         transform.DOMove(oldPos, 0.2f);
@@ -58,6 +55,7 @@ public class BlockDrag : MonoBehaviour
                     }
                     else
                     {
+                        place.Raise(this);
                         gameObject.SetActive(false);
                         gameObject.transform.position = oldPos;
                         int random = Random.Range(0, blockList.blockDatas.Count);
