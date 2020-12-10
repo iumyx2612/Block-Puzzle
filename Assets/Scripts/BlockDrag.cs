@@ -11,8 +11,10 @@ public class BlockDrag : MonoBehaviour
     public Vector3 oldPos;
     private Vector2 defaultScaleSize = new Vector2(0.5f, 0.5f);
     [SerializeField] Vector2 dragScaleSize = new Vector2(1f, 1f);
+
     public BlockDragGameEvent drag;
-    public BlockDragGameEvent accept;
+    public Vector2 curPos;
+    public Vector2 lastPos;
     public BlockDragGameEvent hover;
     public bool hovering = false;
     public bool check = false;
@@ -42,6 +44,9 @@ public class BlockDrag : MonoBehaviour
                     {
                         gameObject.transform.localScale = dragScaleSize;
                         transform.position = touch.pos;
+                        curPos = transform.position;
+                        hover.Raise(this);
+                        Debug.Log(hovering);
                     }
                     break;
                 case UnityEngine.TouchPhase.Ended:

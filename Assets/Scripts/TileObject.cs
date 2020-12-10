@@ -12,16 +12,24 @@ public class TileObject : MonoBehaviour
     {
         model.LoadData(data);
         model.gameObject.SetActive(data != null);
+        Color tmp = model.gameObject.GetComponent<SpriteRenderer>().color;
+        tmp.a = 1f;
+        model.gameObject.GetComponent<SpriteRenderer>().color = tmp;
         _data = data;
     }
 
-    public void Hover(PieceData data)
+    public void Hovering(PieceData data)
     {
         model.LoadData(data);
         model.gameObject.SetActive(data != null);
         Color tmp = model.gameObject.GetComponent<SpriteRenderer>().color;
         tmp.a = 0.6f;
         model.gameObject.GetComponent<SpriteRenderer>().color = tmp;
+    }
+
+    public void UnHover()
+    {
+        model.gameObject.SetActive(false); 
     }
 
     public bool isEmpty()

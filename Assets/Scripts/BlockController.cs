@@ -7,7 +7,6 @@ public class BlockController : MonoBehaviour
 {
     public GameEvent rotate;
     public GameEvent nextpuzzle;
-    public GameEvent check;
 
     public BlockList blockList;
     public SpawnPoint spawnPoint;
@@ -51,10 +50,6 @@ public class BlockController : MonoBehaviour
             blocks[i].transform.position = spawnPoint.spawnPoints[i];
             blocks[i].transform.parent = blockContainer.transform;
             blocks[i].GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
-            //foreach (Transform child in blocks[i].transform)
-            //{
-            //    child.GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
-            //}
         }
     }
 
@@ -77,10 +72,6 @@ public class BlockController : MonoBehaviour
                     blocks[i].transform.parent = blockContainer.transform;
                 }
                 blocks[i].GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
-                //foreach (Transform child in blocks[i].transform)
-                //{
-                //    child.GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
-                //}
             }
         }
     }
