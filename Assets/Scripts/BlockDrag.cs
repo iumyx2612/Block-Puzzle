@@ -4,75 +4,89 @@ using UnityEngine;
 using ScriptableObjectArchitecture;
 using DG.Tweening;
 
-public class BlockDrag : MonoBehaviour
+namespace myengine.BlockPuzzle
 {
-    public BlockList blockList;
-    private bool onPoint = false;
-    public Vector3 oldPos;
-    private Vector2 defaultScaleSize = new Vector2(0.5f, 0.5f);
-    [SerializeField] Vector2 dragScaleSize = new Vector2(1f, 1f);
-
-    public BlockDragGameEvent drag;
-    public BlockDragGameEvent place;
-    public Vector2 curPos;
-    public Vector2 lastPos;
-    public bool hovering = false;
-    public bool check = false;
-
-    private void Start()
+    public class BlockDrag : MonoBehaviour
     {
-        
-    }
-    private void Drag()
-    {
-        
-        TouchPhase touch = InputManager.Touch;
-        if (touch.touchStarted)
+        public BlockList blockList;
+        private bool onPoint = false;
+        public Vector3 oldPos;
+        private Vector2 defaultScaleSize = new Vector2(0.5f, 0.5f);
+        [SerializeField] Vector2 dragScaleSize = new Vector2(1f, 1f);
+
+        public bool isSelecting = false;
+
+        public BlockDragGameEvent drag;
+        public BlockDragGameEvent place;
+        public Vector2 curPos;
+        public Vector2 lastPos;
+        public bool hovering = false;
+        public bool check = false;
+
+        public BlockDragGameEvent completeCheck;
+
+        private void Start()
         {
-            switch (touch.touchPhase)
-            {                
-                case UnityEngine.TouchPhase.Began:
-                    if (gameObject.GetComponent<BoxCollider2D>().bounds.Contains(touch.pos))
-                    {
-                        onPoint = true;
-                        gameObject.transform.localScale = dragScaleSize;
-                    }
-                    break;
-                case UnityEngine.TouchPhase.Moved:
-                    if (gameObject.GetComponent<BoxCollider2D>().bounds.Contains(touch.pos) && onPoint)
-                    {
-                        gameObject.transform.localScale = dragScaleSize;
-                        transform.position = touch.pos;
-                        curPos = transform.position;
-                        drag.Raise(this);
-                    }
-                    break;
-                case UnityEngine.TouchPhase.Ended:
-                    if (!check)
-                    {
-                        transform.DOMove(oldPos, 0.2f);
-                        //transform.position = oldPos;
-                    }
-                    else
-                    {
-                        place.Raise(this);
-                        gameObject.SetActive(false);
-                        gameObject.transform.position = oldPos;
-                        int random = Random.Range(0, blockList.blockDatas.Count);
-                        gameObject.GetComponent<BlockDisplay>().LoadData(random);
-                        gameObject.SetActive(true);
-                    }
-                    onPoint = false;
-                    gameObject.transform.localScale = defaultScaleSize;
-                    check = false;
-                    break;
+
+        }
+        private void Drag()
+        {
+            TouchPhase touch = InputManager.Touch;
+            if (touch.touchStarted)
+            {
+                switch (touch.touchPhase)
+                {
+                    case UnityEngine.TouchPhase.Began:
+                        if (gameObject.GetComponent<BoxCollider2D>().bounds.Contains(touch.pos))
+                        {
+                            isSelecting = true;
+                            onPoint = true;
+                            gameObject.transform.localScale = dragScaleSize;
+                        }
+                        break;
+                    case UnityEngine.TouchPhase.Moved:
+                        if(!isSelecting)
+                        {
+                            break;
+                        }
+                        if (gameObject.GetComponent<BoxCollider2D>().bounds.Contains(touch.pos) && onPoint)
+                        {
+                            gameObject.transform.localScale = dragScaleSize;
+                            transform.position = touch.pos;
+                            curPos = transform.position;
+                            drag.Raise(this);
+                        }
+                        break;
+                    case UnityEngine.TouchPhase.Ended:
+                        if (!isSelecting)
+                        {
+                            break;
+                        }
+                        if (!check)
+                        {
+                            transform.DOMove(oldPos, 0.2f);
+                            //transform.position = oldPos;
+                        }
+                        else
+                        {
+                            //gameObject.SetActive(false);
+                            gameObject.transform.position = new Vector2(999, 999);
+                            place.Raise(this);
+                        }
+                        isSelecting = false;
+                        hovering = false;
+                        onPoint = false;
+                        gameObject.transform.localScale = defaultScaleSize;
+                        check = false;
+                        break;
+                }
             }
         }
-    }
-    
 
-    private void Update()
-    {
-        Drag();
+
+        private void Update()
+        {
+            Drag();
+        }
     }
 }

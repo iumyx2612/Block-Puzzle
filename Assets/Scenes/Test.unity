@@ -246,7 +246,7 @@ GameObject:
   m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &405298544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,19 +259,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffbc452e54d72944fb8e5c48cef1216f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  num_of_squares: 64
   xDist: 0.675
   yDist: 0.675
   squareField: {fileID: 712172967994985613, guid: 004bbec4d75a5af4caa471e5d9ffc968,
     type: 3}
-  tileList: []
   xSquareField: 0
   ySquareField: 0
   greenArea: {fileID: 1430412675}
   position: {x: 0.4, y: 0.4}
   basePosition: {x: -0.349, y: -0.095}
   pieceDistScale: 0
-  eventListen: {fileID: 11400000, guid: 5cde64b6833f07343a1489acea0ef969, type: 2}
+  dragListen: {fileID: 0}
+  placeListen: {fileID: 0}
+  activeBlocks: {fileID: 0}
+  loadNextBlocks: {fileID: 0}
 --- !u!4 &405298545
 Transform:
   m_ObjectHideFlags: 0
@@ -389,7 +390,7 @@ PrefabInstance:
     - target: {fileID: 2006191141287871188, guid: c9cd3bdb67cf9a0448cc44c000c37104,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.69
+      value: -3.87
       objectReference: {fileID: 0}
     - target: {fileID: 2006191141287871188, guid: c9cd3bdb67cf9a0448cc44c000c37104,
         type: 3}

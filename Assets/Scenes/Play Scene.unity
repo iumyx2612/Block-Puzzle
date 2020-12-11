@@ -304,7 +304,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &64792038
 GameObject:
@@ -4190,7 +4190,10 @@ MonoBehaviour:
   basePosition: {x: -0.349, y: -0.095}
   pieceDistScale: 0
   dragListen: {fileID: 11400000, guid: 5cde64b6833f07343a1489acea0ef969, type: 2}
+  placeListen: {fileID: 11400000, guid: dba4e2001ce287e40bdd2b4698edf793, type: 2}
   tileToCheck: []
+  activeBlocks: {fileID: 11400000, guid: 22a060da1ed26ce4baec113ee2cfdf47, type: 2}
+  loadNextBlocks: {fileID: 11400000, guid: f34c7a943918b814eb99bfca70d98ee1, type: 2}
 --- !u!1 &1139169745
 GameObject:
   m_ObjectHideFlags: 0
@@ -7241,11 +7244,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Block Controller
       objectReference: {fileID: 0}
-    - target: {fileID: 5256552928848480188, guid: 21bf00cc731e6934bb16753f87b57beb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5256552928848480189, guid: 21bf00cc731e6934bb16753f87b57beb,
         type: 3}
       propertyPath: blockContainer
@@ -7253,10 +7251,32 @@ PrefabInstance:
       objectReference: {fileID: 61186503}
     - target: {fileID: 5256552928848480189, guid: 21bf00cc731e6934bb16753f87b57beb,
         type: 3}
-      propertyPath: check
+      propertyPath: activeBlocks
       value: 
-      objectReference: {fileID: 11400000, guid: 6aba62193ffc3524fb00dd86fc5d7a28,
+      objectReference: {fileID: 11400000, guid: 22a060da1ed26ce4baec113ee2cfdf47,
         type: 2}
+    - target: {fileID: 5256552928848480189, guid: 21bf00cc731e6934bb16753f87b57beb,
+        type: 3}
+      propertyPath: amountToPool
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5256552928848480189, guid: 21bf00cc731e6934bb16753f87b57beb,
+        type: 3}
+      propertyPath: activeBlocks._variable
+      value: 
+      objectReference: {fileID: 11400000, guid: 22a060da1ed26ce4baec113ee2cfdf47,
+        type: 2}
+    - target: {fileID: 5256552928848480189, guid: 21bf00cc731e6934bb16753f87b57beb,
+        type: 3}
+      propertyPath: defaultActiveBlocks._variable
+      value: 
+      objectReference: {fileID: 11400000, guid: 4a094f59f3268bc46b7227d08f05dcb4,
+        type: 2}
+    - target: {fileID: 5256552928848480189, guid: 21bf00cc731e6934bb16753f87b57beb,
+        type: 3}
+      propertyPath: defaultActiveBlocks._useConstant
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5256552928848480194, guid: 21bf00cc731e6934bb16753f87b57beb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7295,7 +7315,7 @@ PrefabInstance:
     - target: {fileID: 5256552928848480194, guid: 21bf00cc731e6934bb16753f87b57beb,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5256552928848480194, guid: 21bf00cc731e6934bb16753f87b57beb,
         type: 3}

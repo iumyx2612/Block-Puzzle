@@ -3,90 +3,95 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlockController : MonoBehaviour
+namespace myengine.BlockPuzzle
 {
-    public GameEvent rotate;
-    public GameEvent nextpuzzle;
-
-    public BlockList blockList;
-    public SpawnPoint spawnPoint;
-    [SerializeField] private int amountToPool;
-    private List<GameObject> blocks = new List<GameObject>();
-    public GameObject block;
-    [SerializeField] private GameObject blockContainer;
-    private int randomBlock;
-    private int amount_of_active_blocks = 3;
-
-    public Vector2Reference tempPos;
-    
-    private void OnEnable()
+    public class BlockController : MonoBehaviour
     {
-        rotate.AddListener(Rotate);
-        nextpuzzle.AddListener(LoadBlockList);
-    }
-    private void OnDisable()
-    {
-        rotate.RemoveListener(Rotate);
-        nextpuzzle.RemoveListener(LoadBlockList);
-    }
+        public GameEvent rotate;
 
-    private void Awake()
-    {
-        for (int i = 0; i < amountToPool / spawnPoint.spawnPoints.Count; i++)
+        public BlockList blockList;
+        public SpawnPoint spawnPoint;
+        [SerializeField] private int amountToPool;
+        public List<GameObject> blocks = new List<GameObject>();
+        public GameObject block;
+        [SerializeField] private GameObject blockContainer;
+        private int randomBlock;
+
+        public GameEvent nextpuzzle;
+        public IntVariable activeBlocks;
+
+        private void OnEnable()
         {
-            for (int j = 0; j < spawnPoint.spawnPoints.Count; j++)
-            {
-                GameObject newBlock = Instantiate(block, spawnPoint.spawnPoints[j], Quaternion.identity);
-                newBlock.GetComponent<BlockDrag>().oldPos = newBlock.transform.position;
-                newBlock.SetActive(false);
-                blocks.Add(newBlock);
-            }
+            rotate.AddListener(Rotate);
+            nextpuzzle.AddListener(LoadBlockList);
         }
-        for (int i = 0; i < 3; i++)
+        private void OnDisable()
         {
-            randomBlock = Random.Range(0, blockList.blockDatas.Count);
-            blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
-            blocks[i].SetActive(true);
-            blocks[i].transform.position = spawnPoint.spawnPoints[i];
-            blocks[i].transform.parent = blockContainer.transform;
-            blocks[i].GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
+            rotate.RemoveListener(Rotate);
+            nextpuzzle.RemoveListener(LoadBlockList);
+            activeBlocks.Value = 0;
         }
-    }
 
-    public void LoadBlockList()
-    {
-        for (int i = 0; i < 6; i++)
+        private void Awake()
         {
-            if (blocks[i].activeSelf)
+            for (int i = 0; i < amountToPool / spawnPoint.spawnPoints.Count; i++)
             {
-                blocks[i].SetActive(false);
+                for (int j = 0; j < spawnPoint.spawnPoints.Count; j++)
+                {
+                    GameObject newBlock = Instantiate(block, spawnPoint.spawnPoints[j], Quaternion.identity) as GameObject;
+                    newBlock.GetComponent<BlockDrag>().oldPos = newBlock.transform.position;
+                    newBlock.SetActive(false);
+                    blocks.Add(newBlock);
+                }
             }
-            else
+            for (int i = 0; i < 3; i++)
             {
-                randomBlock = Random.Range(0, blockList.blockDatas.Count);
+                randomBlock = Random.Range(1, blockList.blockDatas.Count);
                 blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
                 blocks[i].SetActive(true);
-                blocks[i].transform.position = spawnPoint.spawnPoints[i % 3];
-                if(blocks[i].transform.parent == null)
-                {
-                    blocks[i].transform.parent = blockContainer.transform;
-                }
-                blocks[i].GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
+                blocks[i].transform.position = spawnPoint.spawnPoints[i];
+                blocks[i].transform.parent = blockContainer.transform;
+                //blocks[i].GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
+                activeBlocks.Value++;
             }
         }
-    }
 
-    public void Rotate()
-    {
-        foreach (GameObject block in blocks)
+        public void LoadBlockList()
         {
-            if (block.activeSelf)
+            for (int i = 0; i < 6; i++)
             {
-                block.transform.Rotate(0, 0, 90);
-                for (int i = 0; i < block.GetComponent<BlockDisplay>().points.Count; i++)
+                if (!blocks[i].activeSelf)
                 {
-                    block.GetComponent<BlockDisplay>().points[i] =
-                        new Vector2(-block.GetComponent<BlockDisplay>().points[i].y, block.GetComponent<BlockDisplay>().points[i].x);
+                    randomBlock = Random.Range(1, blockList.blockDatas.Count);
+                    blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
+                    blocks[i].SetActive(true);
+                    activeBlocks.Value++;
+                    //blocks[i].transform.position = spawnPoint.spawnPoints[i % 3];
+                    if (blocks[i].transform.parent == null)
+                    {
+                        blocks[i].transform.parent = blockContainer.transform;
+                    }
+                    //blocks[i].GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
+                }
+                else
+                {
+                    blocks[i].SetActive(false);
+                }
+            }
+        }
+
+        public void Rotate()
+        {
+            foreach (GameObject block in blocks)
+            {
+                if (block.activeSelf)
+                {
+                    block.transform.Rotate(0, 0, 90);
+                    for (int i = 0; i < block.GetComponent<BlockDisplay>().points.Count; i++)
+                    {
+                        block.GetComponent<BlockDisplay>().points[i] =
+                            new Vector2(-block.GetComponent<BlockDisplay>().points[i].y, block.GetComponent<BlockDisplay>().points[i].x);
+                    }
                 }
             }
         }
