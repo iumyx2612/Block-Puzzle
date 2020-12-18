@@ -1,18 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using ScriptableObjectArchitecture;
+using DG.Tweening;
+using myengine.BlockPuzzle;
 
 public class UIManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GameEvent gameOverListen;
+    public GameObject gameOverPanel;
+
+    private void OnEnable()
+    {
+        gameOverListen.AddListener(GameOver);
+    }
+
+    private void OnDisable()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public void GameOver()
     {
-        
-    }
+        gameOverPanel.SetActive(true);
+    }    
 }

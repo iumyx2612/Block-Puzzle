@@ -19,5 +19,4 @@ MonoBehaviour:
   - {x: 1, y: 0}
   - {x: 2, y: 0}
   offset: {x: -1, y: -1}
-  possibleRotation: []
-  anc: []
+  possibleRotation: 4

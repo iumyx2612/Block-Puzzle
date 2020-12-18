@@ -21,6 +21,7 @@ namespace myengine.BlockPuzzle
         public IntVariable activeBlocks;
 
         public GameObjectCollection remainBlocks;
+        public BoolVariable isGameOver;
 
         private void OnEnable()
         {
@@ -102,6 +103,6 @@ namespace myengine.BlockPuzzle
                     }
                 }
             }
-        }
+        }        
     }
 }

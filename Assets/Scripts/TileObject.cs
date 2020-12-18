@@ -57,13 +57,13 @@ namespace myengine.BlockPuzzle
             Tween tween2 = model.gameObject.GetComponent<SpriteRenderer>().DOFade(0f, 0.25f);
             finSeq.Append(tween1);
             finSeq.Join(tween2);
+            _data = null;
+            fakeData = null;
             finSeq.AppendCallback(delegate
             {
                 model.gameObject.transform.DOLocalMove(new Vector2(0, 0), 0.1f);
                 model.gameObject.GetComponent<SpriteRenderer>().DOFade(1f, 0.1f);
                 model.gameObject.SetActive(false);
-                _data = null;
-                fakeData = null;
             });
         }
 
@@ -78,14 +78,14 @@ namespace myengine.BlockPuzzle
             spinnySeq.Append(tween1);
             spinnySeq.Join(tween2);
             spinnySeq.Join(tween3);
+            _data = null;
+            fakeData = null;
             spinnySeq.AppendCallback(delegate
             {
                 model.gameObject.transform.rotation = Quaternion.identity;
                 model.gameObject.transform.DOScale(1f, 0.1f);
                 model.gameObject.GetComponent<SpriteRenderer>().DOFade(1f, 0.1f);
                 model.gameObject.SetActive(false);
-                _data = null;
-                fakeData = null;
             });
         }
 

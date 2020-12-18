@@ -3,6 +3,7 @@ using ScriptableObjectArchitecture;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace myengine.BlockPuzzle
 {
@@ -22,7 +23,7 @@ namespace myengine.BlockPuzzle
         public BlockDragGameEvent dragListen;
         public BlockDragGameEvent placeListen;
 
-        public List<TileObject> tileToCheck = new List<TileObject>();
+        private List<TileObject> tileToCheck = new List<TileObject>();
         private GameObject oldTile;
         private GameObject curTile;
 
@@ -43,10 +44,22 @@ namespace myengine.BlockPuzzle
         public BoolVariable isGameOver;
         private List<TileObject> remainingTile = new List<TileObject>();
         public PieceDataList PieceDataList;
+        public GameEvent gameOverEvent;
+
+        private int num_of_row_col;
+        private readonly int[] scoreSet = new int[]
+        {
+            10, 30, 60, 100, 200
+        };
+        public Text curScoreText;
+        public IntVariable curScore;
+
+        public GameEvent test;
 
         private void OnEnable()
         {
             dragListen.AddListener(DragCheck);
+            test.AddListener(Test);
             placeListen.AddListener(Place);
         }
 
@@ -55,6 +68,8 @@ namespace myengine.BlockPuzzle
             dragListen.RemoveListener(DragCheck);
             placeListen.RemoveListener(Place);
             isGameOver.Value = false;
+            test.RemoveListener(Test);
+            curScore.Value = 0;
         }
 
         public TileObject tim(Vector2 pos)
@@ -211,7 +226,7 @@ namespace myengine.BlockPuzzle
 
         public void Place(BlockDrag drag)
         {
-            if (drag.gameObject.GetComponent<BlockDrag>().check)
+            if (drag.check)
             {
                 foreach (TileObject tile in tileToCheck)
                 {
@@ -219,11 +234,16 @@ namespace myengine.BlockPuzzle
                     remainingTile.Remove(tile);
                 }
             }
+            int oldRowCount = 0;
+            int curRowCount = 0;
+            int oldColCount = 0;
+            int curColCount = 0;
             foreach (TileObject tile in tileToCheck)
             {
                 CheckCompletion(tile);
                 if (rowComplete)
                 {
+                    curRowCount = rowTiles.Count;
                     int ran_num = Random.Range(0, 2);
                     foreach (TileObject tileObject in rowTiles)
                     {
@@ -236,10 +256,16 @@ namespace myengine.BlockPuzzle
                             tileObject.DragFinish((int)tileObject.position.x);
                         }
                     }
+                    if(oldRowCount != curRowCount)
+                    {
+                        oldRowCount = curRowCount;
+                        num_of_row_col += 1;
+                    }
                     rowComplete = false;
                 }
                 if (colComplete)
                 {
+                    curColCount = colTiles.Count;
                     int ran_num = Random.Range(0, 2);
                     foreach (TileObject tileObject in colTiles)
                     {
@@ -252,9 +278,18 @@ namespace myengine.BlockPuzzle
                             tileObject.DragFinish(-(int)tileObject.position.y);
                         }
                     }
+                    if (oldColCount != curColCount)
+                    {
+                        num_of_row_col += 1;
+                    }
                     colComplete = false;
                 }
-            }            
+            }
+            ScoreCalculation(drag.gameObject.GetComponent<BlockDisplay>().activeChild);
+            if (num_of_row_col > 0)
+            {
+                ScoreCalculation(scoreSet[num_of_row_col - 1]);
+            }
             rowTiles.Clear();
             colTiles.Clear();
             tileToCheck.Clear();
@@ -269,6 +304,7 @@ namespace myengine.BlockPuzzle
             if(isGameOver)
             {
                 Freeze();
+                StartCoroutine(WaitTillGameOver());
             }
         }
 
@@ -461,6 +497,12 @@ namespace myengine.BlockPuzzle
             }
         }
 
+        public void ScoreCalculation(int score)
+        {
+            curScore.Value += score;
+            curScoreText.text = curScore.ToString();
+        }
+
         void Start()
         {
             Vector2 topLeft = new Vector2(greenArea.transform.position.x - greenArea.GetComponent<SpriteRenderer>().size.x / 2,
@@ -491,6 +533,24 @@ namespace myengine.BlockPuzzle
         void Update()
         {
 
+        }        
+
+        public void Test()
+        {
+            List<int> testnumbers = new List<int>()
+            {
+                1, 2, 3, 4, 6, 8, 9, 10, 11, 13, 15, 16, 17, 18, 19, 20, 22, 24, 25, 25, 27, 29, 31, 32,
+                33, 34, 35, 36, 38, 40, 41, 42, 43, 45, 47, 49, 50, 51, 52, 54, 57, 58, 59
+            };
+            foreach (int num in testnumbers)
+            {
+                tileList[num - 1].AddPieceData(PieceDataList.pieceDataList[1]);
+            }
+        }
+        IEnumerator WaitTillGameOver()
+        { 
+            yield return new WaitForSeconds(1f);
+            gameOverEvent.Raise();
         }
     }
 }
