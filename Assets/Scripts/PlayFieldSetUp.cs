@@ -21,7 +21,8 @@ namespace myengine.BlockPuzzle
 
         public BlockDragGameEvent dragListen;
         public BlockDragGameEvent placeListen;
-        private List<TileObject> tileToCheck = new List<TileObject>();
+
+        public List<TileObject> tileToCheck = new List<TileObject>();
         private GameObject oldTile;
         private GameObject curTile;
 
@@ -38,16 +39,22 @@ namespace myengine.BlockPuzzle
         private bool hoverRowComplete = false;
         private bool hoverColComplete = false;
 
+        public GameObjectCollection remainBlocks;
+        public BoolVariable isGameOver;
+        private List<TileObject> remainingTile = new List<TileObject>();
+        public PieceDataList PieceDataList;
+
         private void OnEnable()
         {
-            dragListen.AddListener(Check);
+            dragListen.AddListener(DragCheck);
             placeListen.AddListener(Place);
         }
 
         private void OnDisable()
         {
-            dragListen.RemoveListener(Check);
+            dragListen.RemoveListener(DragCheck);
             placeListen.RemoveListener(Place);
+            isGameOver.Value = false;
         }
 
         public TileObject tim(Vector2 pos)
@@ -62,7 +69,46 @@ namespace myengine.BlockPuzzle
             return null;
         }
 
-        public void Check(BlockDrag drag)
+        public bool Check(List<Vector2> points, TileObject tile)
+        {
+            List<Vector2> temp_points = new List<Vector2>();
+            foreach (Vector2 point in points)
+            {
+                temp_points.Add(point);
+            }
+            for (int i = 1; i < points.Count; i++)
+            {
+                Vector2 pointToCheck = tile.position + temp_points[i];
+                TileObject tempTile = tim(pointToCheck);
+                if(tempTile != null && !tileToCheck.Contains(tempTile))
+                {
+                    tileToCheck.Add(tempTile);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            if (tileToCheck.Count > 0)
+            {
+                int checkAmount = 0;
+                foreach (TileObject _tile in tileToCheck)
+                {
+                    if (_tile.isEmpty())
+                    {
+                        checkAmount++;
+                    }
+                    if (checkAmount >= points.Count)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public void DragCheck(BlockDrag drag)
         {
             GameObject basePiece = drag.gameObject.transform.GetChild(0).gameObject;
             if(gameObject.GetComponent<BoxCollider2D>().bounds.Contains(basePiece.transform.position))
@@ -102,33 +148,11 @@ namespace myengine.BlockPuzzle
                         {
                             tileToCheck.Add(tileList[i]);
                         }
-                        for (int j = 1; j < drag.gameObject.GetComponent<BlockDisplay>().points.Count; j++)
+                        if(Check(drag.gameObject.GetComponent<BlockDisplay>().points, tileList[i]))
                         {
-                            Vector2 tempPoint = drag.gameObject.GetComponent<BlockDisplay>().points[j];
-                            Vector2 pointToCheck = tileList[i].position + tempPoint;
-                            TileObject tile = tim(pointToCheck);
-                            if (tile != null && !tileToCheck.Contains(tile))
-                            {
-                                tileToCheck.Add(tile);
-                            }
-                        }
-                        if (tileToCheck.Count > 0)
-                        {
-                            int checkAmount = 0;
-                            foreach (TileObject tile in tileToCheck)
-                            {
-                                if (tile.isEmpty())
-                                {
-                                    checkAmount++;
-                                }
-                                if (checkAmount >= drag.gameObject.transform.GetComponent<BlockDisplay>().activeChild)
-                                {
-                                    drag.gameObject.GetComponent<BlockDrag>().check = true;
-                                    drag.gameObject.GetComponent<BlockDrag>().hovering = true;
-                                }
-                            }
-                            #region kiểm tra nếu đang hover thì sẽ xuất hiện bóng của block và nếu ở trạng thái có thể hoàn thiện thì phát sáng
-                            if (drag.gameObject.GetComponent<BlockDrag>().hovering)
+                            drag.check = true;
+                            drag.hovering = true;
+                            if(drag.hovering)
                             {
                                 foreach (TileObject tile in tileToCheck)
                                 {
@@ -153,7 +177,6 @@ namespace myengine.BlockPuzzle
                                     }
                                 }
                             }
-                            #endregion
                         }
                     }
                 }
@@ -192,7 +215,8 @@ namespace myengine.BlockPuzzle
             {
                 foreach (TileObject tile in tileToCheck)
                 {
-                    tile.addPieceData(drag.transform.GetChild(0).GetComponent<PieceDisplay>().data);
+                    tile.AddPieceData(drag.transform.GetChild(0).GetComponent<PieceDisplay>().data);
+                    remainingTile.Remove(tile);
                 }
             }
             foreach (TileObject tile in tileToCheck)
@@ -200,26 +224,51 @@ namespace myengine.BlockPuzzle
                 CheckCompletion(tile);
                 if (rowComplete)
                 {
-                    foreach (TileObject _tile in rowTiles)
+                    int ran_num = Random.Range(0, 2);
+                    foreach (TileObject tileObject in rowTiles)
                     {
-                        _tile.Finish();
+                        if(ran_num == 0)
+                        {
+                            tileObject.SpinnyFinish((int)tileObject.position.x);
+                        }
+                        else
+                        {
+                            tileObject.DragFinish((int)tileObject.position.x);
+                        }
                     }
                     rowComplete = false;
                 }
                 if (colComplete)
                 {
-                    foreach (TileObject _tile in colTiles)
+                    int ran_num = Random.Range(0, 2);
+                    foreach (TileObject tileObject in colTiles)
                     {
-                        _tile.Finish();
+                        if(ran_num == 0)
+                        {
+                            tileObject.SpinnyFinish(-(int)tileObject.position.y);
+                        }
+                        else
+                        {
+                            tileObject.DragFinish(-(int)tileObject.position.y);
+                        }
                     }
                     colComplete = false;
                 }
-            }
+            }            
+            rowTiles.Clear();
+            colTiles.Clear();
             tileToCheck.Clear();
             activeBlocks.Value--;
+            remainBlocks.Remove(drag.gameObject);
             if (activeBlocks.Value <= 0)
             {
                 loadNextBlocks.Raise();
+            }
+            isGameOver.Value = EndGameCheck();
+            tileToCheck.Clear();
+            if(isGameOver)
+            {
+                Freeze();
             }
         }
 
@@ -336,6 +385,79 @@ namespace myengine.BlockPuzzle
             if(hoverRowTiles.Count > 0)
             {
                 hoverRowComplete = true;
+            }
+        }
+
+        public void RemainingTiles()
+        {
+            for (int i = 0; i < tileList.Count; i++)
+            {
+                if(tileList[i].isEmpty())
+                {
+                    if(!remainingTile.Contains(tileList[i]))
+                    {
+                        remainingTile.Add(tileList[i]);
+                    }
+                }
+            }
+        }
+
+        public List<Vector2> FakeRotate(List<Vector2> points)
+        {
+            List<Vector2> fakePoints = new List<Vector2>();
+            for (int i = 0; i < points.Count; i++)
+            {
+                fakePoints.Add(new Vector2(-points[i].y, points[i].x));
+            }
+            return fakePoints;
+        }
+
+        public bool EndGameCheck()
+        {
+            RemainingTiles();
+            foreach (GameObject block in remainBlocks)
+            {
+                if (remainingTile.Count < block.GetComponent<BlockDisplay>().activeChild)
+                {
+                    return true;
+                }
+                List<Vector2> possible_points_of_block = new List<Vector2>();
+                for (int i = 0; i < remainingTile.Count; i++)
+                {
+                    List<Vector2> fakePoints = block.GetComponent<BlockDisplay>().points;
+                    for (int j = 0; j < block.GetComponent<BlockDisplay>().possibleRotation; j++)
+                    {
+                        tileToCheck.Clear();
+                        tileToCheck.Add(remainingTile[i]);
+                        if(j > 0)
+                        {
+                            if(Check(fakePoints, remainingTile[i]))
+                            {
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            if (Check(block.GetComponent<BlockDisplay>().points, remainingTile[i]))
+                            {
+                                return false;
+                            }
+                        }
+                        fakePoints = FakeRotate(fakePoints);
+                    }
+                }
+            }
+            return true;
+        }
+
+        public void Freeze()
+        {
+            for (int i = 0; i < tileList.Count; i++)
+            {
+                if(!tileList[i].isEmpty())
+                {
+                    tileList[i].Freeze();
+                }
             }
         }
 

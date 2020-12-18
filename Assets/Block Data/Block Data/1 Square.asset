@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   points:
   - {x: 0, y: 0}
+  offset: {x: 0, y: 0}
+  possibleRotation: []
+  anc: []

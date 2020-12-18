@@ -4145,6 +4145,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1091550932}
+  - component: {fileID: 1091550934}
   - component: {fileID: 1091550933}
   m_Layer: 0
   m_Name: Corner 1
@@ -4191,9 +4192,37 @@ MonoBehaviour:
   pieceDistScale: 0
   dragListen: {fileID: 11400000, guid: 5cde64b6833f07343a1489acea0ef969, type: 2}
   placeListen: {fileID: 11400000, guid: dba4e2001ce287e40bdd2b4698edf793, type: 2}
-  tileToCheck: []
   activeBlocks: {fileID: 11400000, guid: 22a060da1ed26ce4baec113ee2cfdf47, type: 2}
   loadNextBlocks: {fileID: 11400000, guid: f34c7a943918b814eb99bfca70d98ee1, type: 2}
+  blocks: {fileID: 11400000, guid: 8e2bcbdc5f3ee084a9fc475a0c6b4de8, type: 2}
+  isGameOver: 0
+  remainingTile: []
+--- !u!61 &1091550934
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091550931}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.39759517}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 5.58399, y: 5.6531167}
+  m_EdgeRadius: 0
 --- !u!1 &1139169745
 GameObject:
   m_ObjectHideFlags: 0
@@ -7246,9 +7275,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5256552928848480189, guid: 21bf00cc731e6934bb16753f87b57beb,
         type: 3}
-      propertyPath: blockContainer
+      propertyPath: blocks
       value: 
-      objectReference: {fileID: 61186503}
+      objectReference: {fileID: 11400000, guid: 8e2bcbdc5f3ee084a9fc475a0c6b4de8,
+        type: 2}
     - target: {fileID: 5256552928848480189, guid: 21bf00cc731e6934bb16753f87b57beb,
         type: 3}
       propertyPath: activeBlocks
@@ -7260,6 +7290,11 @@ PrefabInstance:
       propertyPath: amountToPool
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 5256552928848480189, guid: 21bf00cc731e6934bb16753f87b57beb,
+        type: 3}
+      propertyPath: blockContainer
+      value: 
+      objectReference: {fileID: 61186503}
     - target: {fileID: 5256552928848480189, guid: 21bf00cc731e6934bb16753f87b57beb,
         type: 3}
       propertyPath: activeBlocks._variable
@@ -7279,6 +7314,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5256552928848480194, guid: 21bf00cc731e6934bb16753f87b57beb,
         type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5256552928848480194, guid: 21bf00cc731e6934bb16753f87b57beb,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -7294,6 +7334,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5256552928848480194, guid: 21bf00cc731e6934bb16753f87b57beb,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5256552928848480194, guid: 21bf00cc731e6934bb16753f87b57beb,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -7306,16 +7351,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5256552928848480194, guid: 21bf00cc731e6934bb16753f87b57beb,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5256552928848480194, guid: 21bf00cc731e6934bb16753f87b57beb,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5256552928848480194, guid: 21bf00cc731e6934bb16753f87b57beb,
         type: 3}

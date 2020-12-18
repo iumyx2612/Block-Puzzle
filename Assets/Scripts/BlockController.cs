@@ -12,13 +12,15 @@ namespace myengine.BlockPuzzle
         public BlockList blockList;
         public SpawnPoint spawnPoint;
         [SerializeField] private int amountToPool;
-        public List<GameObject> blocks = new List<GameObject>();
+        public GameObjectCollection blocks;
         public GameObject block;
         [SerializeField] private GameObject blockContainer;
         private int randomBlock;
 
         public GameEvent nextpuzzle;
         public IntVariable activeBlocks;
+
+        public GameObjectCollection remainBlocks;
 
         private void OnEnable()
         {
@@ -30,6 +32,8 @@ namespace myengine.BlockPuzzle
             rotate.RemoveListener(Rotate);
             nextpuzzle.RemoveListener(LoadBlockList);
             activeBlocks.Value = 0;
+            blocks.Clear();
+            remainBlocks.Clear();
         }
 
         private void Awake()
@@ -46,13 +50,14 @@ namespace myengine.BlockPuzzle
             }
             for (int i = 0; i < 3; i++)
             {
-                randomBlock = Random.Range(1, blockList.blockDatas.Count);
+                randomBlock = Random.Range(0, blockList.blockDatas.Count);
                 blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
                 blocks[i].SetActive(true);
                 blocks[i].transform.position = spawnPoint.spawnPoints[i];
                 blocks[i].transform.parent = blockContainer.transform;
                 //blocks[i].GetComponent<BlockDrag>().oldPos = blocks[i].transform.position;
                 activeBlocks.Value++;
+                remainBlocks.Add(blocks[i]);
             }
         }
 
@@ -62,9 +67,10 @@ namespace myengine.BlockPuzzle
             {
                 if (!blocks[i].activeSelf)
                 {
-                    randomBlock = Random.Range(1, blockList.blockDatas.Count);
+                    randomBlock = Random.Range(0, blockList.blockDatas.Count);
                     blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
                     blocks[i].SetActive(true);
+                    remainBlocks.Add(blocks[i]);
                     activeBlocks.Value++;
                     //blocks[i].transform.position = spawnPoint.spawnPoints[i % 3];
                     if (blocks[i].transform.parent == null)
@@ -76,6 +82,7 @@ namespace myengine.BlockPuzzle
                 else
                 {
                     blocks[i].SetActive(false);
+                    remainBlocks.Remove(blocks[i]);
                 }
             }
         }
@@ -90,7 +97,8 @@ namespace myengine.BlockPuzzle
                     for (int i = 0; i < block.GetComponent<BlockDisplay>().points.Count; i++)
                     {
                         block.GetComponent<BlockDisplay>().points[i] =
-                            new Vector2(-block.GetComponent<BlockDisplay>().points[i].y, block.GetComponent<BlockDisplay>().points[i].x);
+                            new Vector2(-block.GetComponent<BlockDisplay>().points[i].y,
+                            block.GetComponent<BlockDisplay>().points[i].x);
                     }
                 }
             }

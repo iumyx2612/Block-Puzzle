@@ -7,4 +7,5 @@ public class BlockData : ScriptableObject
 {
     public List<Vector2> points = new List<Vector2>();
     public Vector2 offset;
+    public int possibleRotation;
 }
