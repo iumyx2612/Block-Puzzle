@@ -22,8 +22,11 @@ namespace myengine.BlockPuzzle
         public Vector2 lastPos;
         public bool hovering = false;
         public bool check = false;
+        private Vector2 rawPos = Vector2.zero;
 
-        public BlockDragGameEvent completeCheck;
+
+        public BoolVariable rotateAble;
+        public BoolVariable rotateChooser;
 
         private void Start()
         {
@@ -37,14 +40,15 @@ namespace myengine.BlockPuzzle
                 switch (touch.touchPhase)
                 {
                     case UnityEngine.TouchPhase.Began:
+                        rawPos = touch.pos;
                         if (gameObject.GetComponent<BoxCollider2D>().bounds.Contains(touch.pos))
                         {
                             isSelecting = true;
                             onPoint = true;
-                            gameObject.transform.localScale = dragScaleSize;
                         }
                         break;
                     case UnityEngine.TouchPhase.Moved:
+
                         if(!isSelecting)
                         {
                             break;
@@ -58,6 +62,18 @@ namespace myengine.BlockPuzzle
                         }
                         break;
                     case UnityEngine.TouchPhase.Ended:
+                        if (Vector2.Distance(rawPos, touch.pos) > 0.2f)
+                        {
+                            rotateChooser.Value = false;
+                        }
+                        else
+                        {
+                            rotateChooser.Value = true;
+                        }
+                        if(rotateChooser && rotateAble && onPoint)
+                        {
+                            gameObject.GetComponent<BlockDisplay>().Rotate();
+                        }
                         if (!isSelecting)
                         {
                             break;

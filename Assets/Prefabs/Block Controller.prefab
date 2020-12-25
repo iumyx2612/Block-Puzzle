@@ -44,13 +44,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotate: {fileID: 11400000, guid: 8e073142eefcb1747a46a1c2a2ef1f11, type: 2}
-  nextpuzzle: {fileID: 11400000, guid: f34c7a943918b814eb99bfca70d98ee1, type: 2}
-  blockList: {fileID: 11400000, guid: d94d358af3c66134c84ee1a259679aea, type: 2}
+  blockLists:
+  - {fileID: 11400000, guid: 6ad7a43817e7123449bd7444fabb9fbe, type: 2}
+  - {fileID: 11400000, guid: 9a4092fc8432b4c428d72390f2c051b8, type: 2}
+  - {fileID: 11400000, guid: d7b5d2adc761b2c44900674c6033d70d, type: 2}
+  - {fileID: 11400000, guid: e5861bb510a8e7044a0d050ed75cf7d2, type: 2}
+  - {fileID: 11400000, guid: 407f7d4c47282ea47a89bcfed7e86434, type: 2}
+  chosenGroup: {fileID: 0}
   spawnPoint: {fileID: 11400000, guid: 2066f250f895b6d4aa6b15b76b15503e, type: 2}
-  amountToPool: 3
+  amountToPool: 6
+  blocks: {fileID: 11400000, guid: 8e2bcbdc5f3ee084a9fc475a0c6b4de8, type: 2}
   block: {fileID: 2006191141287871186, guid: c9cd3bdb67cf9a0448cc44c000c37104, type: 3}
   blockContainer: {fileID: 0}
-  tempPos:
-    _useConstant: 0
-    _constantValue: {x: 0, y: 0}
-    _variable: {fileID: 0}
+  nextpuzzle: {fileID: 11400000, guid: f34c7a943918b814eb99bfca70d98ee1, type: 2}
+  activeBlocks: {fileID: 11400000, guid: 22a060da1ed26ce4baec113ee2cfdf47, type: 2}
+  remainBlocks: {fileID: 11400000, guid: 9d1ade2c9a5f3384eb047be8241ba4a3, type: 2}
+  isGameOver: {fileID: 11400000, guid: 36978a353b4885e4899e8fa45840c8a7, type: 2}

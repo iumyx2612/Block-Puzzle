@@ -54,6 +54,11 @@ namespace myengine.BlockPuzzle
         public Text curScoreText;
         public IntVariable curScore;
 
+        public Text highScoreText;
+        public IntVariable highScore;
+
+        public GameEvent welldoneGameEvent;
+
         public GameEvent test;
 
         private void OnEnable()
@@ -61,6 +66,8 @@ namespace myengine.BlockPuzzle
             dragListen.AddListener(DragCheck);
             test.AddListener(Test);
             placeListen.AddListener(Place);
+            highScore.Value = PlayerPrefs.GetInt("HighScore");
+            highScoreText.text = highScore.Value.ToString();
         }
 
         private void OnDisable()
@@ -125,7 +132,7 @@ namespace myengine.BlockPuzzle
 
         public void DragCheck(BlockDrag drag)
         {
-            GameObject basePiece = drag.gameObject.transform.GetChild(0).gameObject;
+            GameObject basePiece = drag.gameObject.transform.GetChild(1).gameObject;
             if(gameObject.GetComponent<BoxCollider2D>().bounds.Contains(basePiece.transform.position))
             {
                 for (int i = 0; i < tileList.Count; i++)
@@ -230,66 +237,57 @@ namespace myengine.BlockPuzzle
             {
                 foreach (TileObject tile in tileToCheck)
                 {
-                    tile.AddPieceData(drag.transform.GetChild(0).GetComponent<PieceDisplay>().data);
+                    tile.AddPieceData(drag.transform.GetChild(1).GetComponent<PieceDisplay>().data);
                     remainingTile.Remove(tile);
                 }
             }
-            int oldRowCount = 0;
-            int curRowCount = 0;
-            int oldColCount = 0;
-            int curColCount = 0;
             foreach (TileObject tile in tileToCheck)
             {
                 CheckCompletion(tile);
-                if (rowComplete)
-                {
-                    curRowCount = rowTiles.Count;
-                    int ran_num = Random.Range(0, 2);
-                    foreach (TileObject tileObject in rowTiles)
-                    {
-                        if(ran_num == 0)
-                        {
-                            tileObject.SpinnyFinish((int)tileObject.position.x);
-                        }
-                        else
-                        {
-                            tileObject.DragFinish((int)tileObject.position.x);
-                        }
-                    }
-                    if(oldRowCount != curRowCount)
-                    {
-                        oldRowCount = curRowCount;
-                        num_of_row_col += 1;
-                    }
-                    rowComplete = false;
-                }
-                if (colComplete)
-                {
-                    curColCount = colTiles.Count;
-                    int ran_num = Random.Range(0, 2);
-                    foreach (TileObject tileObject in colTiles)
-                    {
-                        if(ran_num == 0)
-                        {
-                            tileObject.SpinnyFinish(-(int)tileObject.position.y);
-                        }
-                        else
-                        {
-                            tileObject.DragFinish(-(int)tileObject.position.y);
-                        }
-                    }
-                    if (oldColCount != curColCount)
-                    {
-                        num_of_row_col += 1;
-                    }
-                    colComplete = false;
-                }
             }
+            if (rowComplete)
+            {
+                int ran_num = Random.Range(0, 2);
+                foreach (TileObject tileObject in rowTiles)
+                {
+                    if (ran_num == 0)
+                    {
+                        tileObject.SpinnyFinish((int)tileObject.position.x);
+                    }
+                    else
+                    {
+                        tileObject.DragFinish((int)tileObject.position.x);
+                    }
+                }
+                rowComplete = false;
+            }
+            if (colComplete)
+            {
+                int ran_num = Random.Range(0, 2);
+                foreach (TileObject tileObject in colTiles)
+                {
+                    if (ran_num == 0)
+                    {
+                        tileObject.SpinnyFinish(-(int)tileObject.position.y);
+                    }
+                    else
+                    {
+                        tileObject.DragFinish(-(int)tileObject.position.y);
+                    }
+                }
+                colComplete = false;
+            }
+            num_of_row_col = (colTiles.Count + rowTiles.Count) / 8;
             ScoreCalculation(drag.gameObject.GetComponent<BlockDisplay>().activeChild);
             if (num_of_row_col > 0)
             {
                 ScoreCalculation(scoreSet[num_of_row_col - 1]);
+                if (num_of_row_col >= 3)
+                {
+                    welldoneGameEvent.Raise();
+                }
             }
+            num_of_row_col = 0;
             rowTiles.Clear();
             colTiles.Clear();
             tileToCheck.Clear();
@@ -310,6 +308,8 @@ namespace myengine.BlockPuzzle
 
         public void CheckCompletion(TileObject tile)
         {
+            List<TileObject> tempRowTile = new List<TileObject>();
+            List<TileObject> tempColTile = new List<TileObject>();
             int _x = (int)tile.position.x;
             int _y = (int)tile.position.y;
             int rowCount = 0;
@@ -320,17 +320,24 @@ namespace myengine.BlockPuzzle
                 if (!tileList[-8 * _y + i - 1].isEmpty())
                 {
                     rowCount++;
-                    rowTiles.Add(tileList[-8 * _y + i - 1]);
+                    tempRowTile.Add(tileList[-8 * _y + i - 1]);
                 }
                 else
                 {
-                    rowTiles.Clear();
+                    tempRowTile.Clear();
                     break;
                 }
             }
             if (rowCount == 8)
             {
                 rowComplete = true;
+                for (int i = 0; i < 8; i++)
+                {
+                    if(!rowTiles.Contains(tempRowTile[i]))
+                    {
+                        rowTiles.Add(tempRowTile[i]);
+                    }
+                }
             }
             #endregion
             #region check col
@@ -339,17 +346,24 @@ namespace myengine.BlockPuzzle
                 if (!tileList[i * 8 + _x].isEmpty())
                 {
                     colCount++;
-                    colTiles.Add(tileList[i * 8 + _x]);
+                    tempColTile.Add(tileList[i * 8 + _x]);
                 }
                 else
                 {
-                    colTiles.Clear();
+                    tempColTile.Clear();
                     break;
                 }
             }
             if (colCount == 8)
             {
                 colComplete = true;
+                for (int i = 0; i < 8; i++)
+                {
+                    if(!colTiles.Contains(tempColTile[i]))
+                    {
+                        colTiles.Add(tempColTile[i]);
+                    }
+                }
             }
             #endregion
         }
@@ -500,7 +514,18 @@ namespace myengine.BlockPuzzle
         public void ScoreCalculation(int score)
         {
             curScore.Value += score;
+            HighScoreCalculation();
             curScoreText.text = curScore.ToString();
+        }
+
+        public void HighScoreCalculation()
+        {
+            if (curScore.Value > highScore.Value)
+            {
+                highScore.Value = curScore.Value;
+                highScoreText.text = highScore.Value.ToString();
+                PlayerPrefs.SetInt("HighScore", highScore.Value);
+            }
         }
 
         void Start()
@@ -539,8 +564,7 @@ namespace myengine.BlockPuzzle
         {
             List<int> testnumbers = new List<int>()
             {
-                1, 2, 3, 4, 6, 8, 9, 10, 11, 13, 15, 16, 17, 18, 19, 20, 22, 24, 25, 25, 27, 29, 31, 32,
-                33, 34, 35, 36, 38, 40, 41, 42, 43, 45, 47, 49, 50, 51, 52, 54, 57, 58, 59
+                57, 58, 59, 60, 61, 62, 63, 8, 16, 24, 32, 40, 48, 49, 50, 51, 52, 53, 54, 55
             };
             foreach (int num in testnumbers)
             {

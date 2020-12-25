@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using ScriptableObjectArchitecture;
 using myengine.BlockPuzzle;
+using UnityEngine.UI;
 
 namespace myengine.BlockPuzzle
 {
     public class BlockDisplay : MonoBehaviour
     {
-        public BlockList blockList;
+        public BlockList chosenGroup;
         public List<Vector2> points = new List<Vector2>();
         public Vector2 offset;
         public int possibleRotation;
@@ -23,18 +24,23 @@ namespace myengine.BlockPuzzle
 
         public int activeChild;
 
-        public List<Vector2> fakePoints = new List<Vector2>();
+        public GameObject rotateBtn;
+        public BoolVariable enableRotate;
+        public IntVariable rotateCounter;
+        public GameEvent rotate;
+        private List<Vector2> initialPoints = new List<Vector2>();
         // Start is called before the first frame update
 
         private void Awake()
         {
-            //LoadData(11);
+            //LoadData(7);
             for (int i = 0; i < preloadPieces; i++)
             {
                 GameObject newPiece = Instantiate(piece, transform);
                 newPiece.SetActive(false);
                 pieces.Add(newPiece);
             }
+            RotateBtnOnOff();
         }
         void OnEnable()
         {
@@ -52,10 +58,19 @@ namespace myengine.BlockPuzzle
                     activeChild++;
                 }
             }
-            //foreach (Vector2 point in points)
-            //{
-            //    fakePoints.Add(point);
-            //}
+            enableRotate.AddListener(RotateBtnOnOff);        
+        }
+
+        public void RotateBtnOnOff()
+        {
+            if(enableRotate)
+            {
+                rotateBtn.SetActive(true);
+            }
+            else
+            {
+                rotateBtn.SetActive(false);
+            }
         }
 
         private void OnDisable()
@@ -68,28 +83,55 @@ namespace myengine.BlockPuzzle
             gameObject.transform.localScale = new Vector2(1f, 1f);
             gameObject.transform.position = gameObject.GetComponent<BlockDrag>().oldPos;
             points.Clear();
-            //fakePoints.Clear();
+            initialPoints.Clear();
             offset = Vector2.zero;
             possibleRotation = 0;
             activeChild = 0;
             transform.rotation = Quaternion.identity;
+            enableRotate.RemoveListener(RotateBtnOnOff);
         }
 
         // Update is called once per frame
         void Update()
         {
+
         }
 
         public void LoadData(int data)
         {
-            for (int i = 0; i < blockList.blockDatas[data].points.Count; i++)
+            for (int i = 0; i < chosenGroup.blockDatas[data].points.Count; i++)
             {
-                points.Add(blockList.blockDatas[data].points[i]);
+                points.Add(chosenGroup.blockDatas[data].points[i]);
+                initialPoints.Add(chosenGroup.blockDatas[data].points[i]);
             }
-            possibleRotation = blockList.blockDatas[data].possibleRotation;
-            offset = blockList.blockDatas[data].offset;
+            possibleRotation = chosenGroup.blockDatas[data].possibleRotation;
+            offset = chosenGroup.blockDatas[data].offset;
             chosenColor = Random.Range(1, dataList.pieceDataList.Count);
-        }        
+        }
+
+        public void Rotate()
+        {
+            rotateCounter.Value--;
+            rotate.Raise();
+            for (int i = 0; i < points.Count; i++)
+            {
+                points[i] = new Vector2(-points[i].y, points[i].x);
+            }
+            transform.Rotate(0, 0, 90);
+            int num_of_points_to_check = 0;
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (points[i] == initialPoints[i])
+                {
+                    num_of_points_to_check++;
+                }
+            }
+            if(num_of_points_to_check == points.Count)
+            {
+                rotateCounter.Value = 3;
+            }
+        }
+
     }
 
 }

@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a459e390f0404eb4a9bf67e8563f3838, type: 3}
+  m_Name: Group 1
+  m_EditorClassIdentifier: 
+  blockDatas:
+  - {fileID: 11400000, guid: a782a2af343d4b446860b685eca29e16, type: 2}
+  - {fileID: 11400000, guid: 4ffe92085ec8a854eb490caad1b25372, type: 2}
+  - {fileID: 11400000, guid: 2fa6cd8ca91f87640b5ed412d8632a43, type: 2}
+  - {fileID: 11400000, guid: 5ef09e24629a6d545a55db6335f97d21, type: 2}
+  - {fileID: 11400000, guid: f15b1cc34ccb42d47b7fe1258f37f03e, type: 2}
+  - {fileID: 11400000, guid: 93aa2ac0115bf7a429b2f217d7991371, type: 2}
+  - {fileID: 11400000, guid: 9947b3719844c784ca5b1c3b5a52f12e, type: 2}
+  - {fileID: 11400000, guid: 622a99df9531f924b85d0971054ade94, type: 2}
+  - {fileID: 11400000, guid: 136066ac745fe5644b3930a969f4a638, type: 2}
+  - {fileID: 11400000, guid: 5288dfbc8da18e04eb5fe2bd4bf84d99, type: 2}
+  - {fileID: 11400000, guid: db77341354a79624ba49794c6efc1965, type: 2}
+  - {fileID: 11400000, guid: d6fbd62629dc51444913a11faee17eb2, type: 2}
+  - {fileID: 11400000, guid: 23ef8740dd9456843ae0347a220861a1, type: 2}
+  - {fileID: 11400000, guid: ef3210b64557ee349976510d00a07677, type: 2}
+  - {fileID: 11400000, guid: 08b402547ce2b5348951738f87827f17, type: 2}
+  - {fileID: 11400000, guid: 07e57b02357ad0f4fa5592cc384e513e, type: 2}
+  - {fileID: 11400000, guid: 085b219295c32414d8e8f9a9c196893c, type: 2}
+  - {fileID: 11400000, guid: e27b67f2d41c4df48ae4933efa43891b, type: 2}
+  - {fileID: 11400000, guid: e4bdad9c6cea29f41beda4197e719641, type: 2}
+  - {fileID: 11400000, guid: 495cde096a3c8bf4cacfb96362445092, type: 2}
+  - {fileID: 11400000, guid: b38c2500e3618394180f38a8edfff0a8, type: 2}
+  - {fileID: 11400000, guid: 93b6d12d0983bf746b0c008602caf898, type: 2}
+  - {fileID: 11400000, guid: 91a56c5618c845b43820e7b3367fb4d0, type: 2}
+  - {fileID: 11400000, guid: 622270dfd87b2be49abb4b64de499e21, type: 2}
+  percentage: 0.7

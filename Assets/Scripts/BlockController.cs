@@ -7,9 +7,9 @@ namespace myengine.BlockPuzzle
 {
     public class BlockController : MonoBehaviour
     {
-        public GameEvent rotate;
-
-        public BlockList blockList;
+        //public BlockList blockList;
+        public List<BlockList> blockLists = new List<BlockList>();
+        public BlockList chosenGroup;
         public SpawnPoint spawnPoint;
         [SerializeField] private int amountToPool;
         public GameObjectCollection blocks;
@@ -25,12 +25,10 @@ namespace myengine.BlockPuzzle
 
         private void OnEnable()
         {
-            rotate.AddListener(Rotate);
             nextpuzzle.AddListener(LoadBlockList);
         }
         private void OnDisable()
         {
-            rotate.RemoveListener(Rotate);
             nextpuzzle.RemoveListener(LoadBlockList);
             activeBlocks.Value = 0;
             blocks.Clear();
@@ -51,7 +49,19 @@ namespace myengine.BlockPuzzle
             }
             for (int i = 0; i < 3; i++)
             {
-                randomBlock = Random.Range(0, blockList.blockDatas.Count);
+                float randNum = Random.Range(0f, 0.7f);
+                float percentage = 0;
+                for (int j = 0; j < blockLists.Count; j++)
+                {
+                    percentage += blockLists[j].percentage;
+                    if (percentage >= randNum)
+                    {
+                        chosenGroup = blockLists[j];
+                        break;
+                    }
+                }
+                randomBlock = Random.Range(2, 2);
+                blocks[i].GetComponent<BlockDisplay>().chosenGroup = chosenGroup;
                 blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
                 blocks[i].SetActive(true);
                 blocks[i].transform.position = spawnPoint.spawnPoints[i];
@@ -68,7 +78,19 @@ namespace myengine.BlockPuzzle
             {
                 if (!blocks[i].activeSelf)
                 {
-                    randomBlock = Random.Range(0, blockList.blockDatas.Count);
+                    float randNum = Random.Range(0.0f, 1f);
+                    float percentage = 0;
+                    for (int j = 0; j < blockLists.Count; j++)
+                    {
+                        percentage += blockLists[j].percentage;
+                        if (percentage >= randNum)
+                        {
+                            chosenGroup = blockLists[j];
+                            break;
+                        }
+                    }
+                    randomBlock = Random.Range(2, 2);
+                    blocks[i].GetComponent<BlockDisplay>().chosenGroup = chosenGroup;
                     blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
                     blocks[i].SetActive(true);
                     remainBlocks.Add(blocks[i]);
@@ -86,23 +108,6 @@ namespace myengine.BlockPuzzle
                     remainBlocks.Remove(blocks[i]);
                 }
             }
-        }
-
-        public void Rotate()
-        {
-            foreach (GameObject block in blocks)
-            {
-                if (block.activeSelf)
-                {
-                    block.transform.Rotate(0, 0, 90);
-                    for (int i = 0; i < block.GetComponent<BlockDisplay>().points.Count; i++)
-                    {
-                        block.GetComponent<BlockDisplay>().points[i] =
-                            new Vector2(-block.GetComponent<BlockDisplay>().points[i].y,
-                            block.GetComponent<BlockDisplay>().points[i].x);
-                    }
-                }
-            }
-        }        
+        }                
     }
 }

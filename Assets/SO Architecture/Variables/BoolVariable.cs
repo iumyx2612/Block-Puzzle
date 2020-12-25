@@ -12,5 +12,9 @@ namespace ScriptableObjectArchitecture
         order = SOArchitecture_Utility.ASSET_MENU_ORDER_COLLECTIONS + 5)]
     public sealed class BoolVariable : BaseVariable<bool, BoolEvent>
     {
+        public void Toggle()
+        {
+            Value = !Value; 
+        }
     }
 }

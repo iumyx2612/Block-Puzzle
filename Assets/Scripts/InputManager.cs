@@ -26,7 +26,7 @@ public static class InputManager
 #endif
 #if UNITY_EDITOR
             touch.touchStarted = Input.GetMouseButton(0) || Input.GetMouseButtonDown(0) || Input.GetMouseButtonUp(0);
-            if(Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 touch.touchPhase = UnityEngine.TouchPhase.Began;
             }
