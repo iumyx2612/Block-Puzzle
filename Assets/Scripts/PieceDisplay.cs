@@ -28,4 +28,9 @@ public class PieceDisplay : MonoBehaviour
         sR.sprite = data.sprite;
         this.data = data;
     }
+
+    public void LoadFakeData(PieceData data)
+    {
+        sR.sprite = data.sprite;
+    }
 }

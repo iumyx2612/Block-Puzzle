@@ -18,3 +18,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4888e1afa381d724f984c7568768c56a, type: 2}
   - {fileID: 11400000, guid: 143c793b4da161741b1c367911bbf82f, type: 2}
   percentage: 0.03
+  startingScore: 700

@@ -53,7 +53,8 @@ namespace myengine.BlockPuzzle
                         {
                             break;
                         }
-                        if (gameObject.GetComponent<BoxCollider2D>().bounds.Contains(touch.pos) && onPoint)
+                        if (/*gameObject.GetComponent<BoxCollider2D>().bounds.Contains(touch.pos) && */onPoint)
+                            //k để bounds.Contain vì khi di quá nhanh thì touch.pos có thể nằm ngoài collider
                         {
                             gameObject.transform.localScale = dragScaleSize;
                             transform.position = touch.pos;

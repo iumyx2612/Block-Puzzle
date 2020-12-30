@@ -7,4 +7,5 @@ public class BlockList : ScriptableObject
 {
     public List<BlockData> blockDatas = new List<BlockData>();
     public float percentage;
+    public int startingScore;
 }

@@ -8,20 +8,22 @@ namespace myengine.BlockPuzzle
     public class BlockController : MonoBehaviour
     {
         //public BlockList blockList;
-        public List<BlockList> blockLists = new List<BlockList>();
-        public BlockList chosenGroup;
-        public SpawnPoint spawnPoint;
+        [SerializeField] private List<BlockList> blockLists = new List<BlockList>();
+        [SerializeField] private SpawnPoint spawnPoint;
         [SerializeField] private int amountToPool;
         public GameObjectCollection blocks;
         public GameObject block;
         [SerializeField] private GameObject blockContainer;
         private int randomBlock;
 
-        public GameEvent nextpuzzle;
-        public IntVariable activeBlocks;
+        [SerializeField] private GameEvent nextpuzzle;
+        [SerializeField] private IntVariable activeBlocks;
+        [SerializeField] private IntVariable curScore;
+        private List<BlockList> spawnAbleGroup = new List<BlockList>();
+        private BlockList chosenGroup;
 
-        public GameObjectCollection remainBlocks;
-        public BoolVariable isGameOver;
+        [SerializeField] private GameObjectCollection remainBlocks;
+        [SerializeField] private BoolVariable isGameOver;
 
         private void OnEnable()
         {
@@ -49,7 +51,7 @@ namespace myengine.BlockPuzzle
             }
             for (int i = 0; i < 3; i++)
             {
-                float randNum = Random.Range(0f, 0.7f);
+                float randNum = Random.Range(0f, 0.85f);
                 float percentage = 0;
                 for (int j = 0; j < blockLists.Count; j++)
                 {
@@ -60,7 +62,17 @@ namespace myengine.BlockPuzzle
                         break;
                     }
                 }
-                randomBlock = Random.Range(2, 2);
+                //#region testcase
+                //if (i == 0)
+                //{
+                //    randomBlock = 22;
+                //}
+                //else
+                //{
+                //    randomBlock = Random.Range(12, 13);
+                //}
+                //#endregion
+                randomBlock = Random.Range(0, chosenGroup.blockDatas.Count);
                 blocks[i].GetComponent<BlockDisplay>().chosenGroup = chosenGroup;
                 blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
                 blocks[i].SetActive(true);
@@ -78,7 +90,19 @@ namespace myengine.BlockPuzzle
             {
                 if (!blocks[i].activeSelf)
                 {
-                    float randNum = Random.Range(0.0f, 1f);
+                    for (int j = 0; j < blockLists.Count; j++)
+                    {
+                        if(curScore > blockLists[j].startingScore && !spawnAbleGroup.Contains(blockLists[j]))
+                        {
+                            spawnAbleGroup.Add(blockLists[j]);
+                        }
+                    }
+                    float upperRange = 0f;
+                    for (int j = 0; j < spawnAbleGroup.Count; j++)
+                    {
+                        upperRange += spawnAbleGroup[j].percentage;
+                    }
+                    float randNum = Random.Range(0, upperRange);
                     float percentage = 0;
                     for (int j = 0; j < blockLists.Count; j++)
                     {
@@ -89,7 +113,7 @@ namespace myengine.BlockPuzzle
                             break;
                         }
                     }
-                    randomBlock = Random.Range(2, 2);
+                    randomBlock = Random.Range(0, chosenGroup.blockDatas.Count);
                     blocks[i].GetComponent<BlockDisplay>().chosenGroup = chosenGroup;
                     blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
                     blocks[i].SetActive(true);

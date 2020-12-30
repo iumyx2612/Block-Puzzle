@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 720, y: 1280}
+  m_SizeDelta: {x: 60.881226, y: 56.22592}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &863029865
 Canvas:
@@ -257,6 +257,7 @@ MonoBehaviour:
   enableRotate: {fileID: 11400000, guid: ba0ea22233d374c42a933778cde6fd07, type: 2}
   rotateCounter: {fileID: 11400000, guid: def12eabc6ece454388fa03f152e5f3d, type: 2}
   rotate: {fileID: 11400000, guid: 7159c9d1b2956a244902cbe9db04f4bb, type: 2}
+  rotateBtnClicked: {fileID: 11400000, guid: fbbe9efb3c849a543b34639f5ef3e1b7, type: 2}
 --- !u!114 &-5686473859066925407
 MonoBehaviour:
   m_ObjectHideFlags: 0

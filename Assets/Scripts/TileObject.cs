@@ -8,17 +8,20 @@ namespace myengine.BlockPuzzle
     public class TileObject : MonoBehaviour
     {
         public PieceDisplay model;
+        private Vector2 inital_model_pos;
         public GameObject greyshit;
         public PieceData _data;
         public PieceData fakeData;
         public Vector2 position;
         public GameObject flashbang;
+        [SerializeField] private float shatterSpeed;
 
         private void OnEnable()
         {
             Color tmp = greyshit.gameObject.GetComponent<SpriteRenderer>().color;
             tmp.a = 0f;
             greyshit.gameObject.GetComponent<SpriteRenderer>().color = tmp;
+            inital_model_pos = model.gameObject.transform.localPosition;
         }
 
         public void AddPieceData(PieceData data)
@@ -53,16 +56,16 @@ namespace myengine.BlockPuzzle
             UnFlash();
             Sequence finSeq = DOTween.Sequence();
             finSeq.PrependInterval(0.05f * index);
-            Tween tween1 = model.gameObject.transform.DOLocalMove(new Vector2(0, 0.5f), 0.25f);
-            Tween tween2 = model.gameObject.GetComponent<SpriteRenderer>().DOFade(0f, 0.25f);
+            Tween tween1 = model.gameObject.transform.DOLocalMove(new Vector2(0, 0.5f), 0.25f).SetUpdate(true);
+            Tween tween2 = model.gameObject.GetComponent<SpriteRenderer>().DOFade(0f, 0.25f).SetUpdate(true);
             finSeq.Append(tween1);
             finSeq.Join(tween2);
             _data = null;
             fakeData = null;
             finSeq.AppendCallback(delegate
             {
-                model.gameObject.transform.DOLocalMove(new Vector2(0, 0), 0.1f);
-                model.gameObject.GetComponent<SpriteRenderer>().DOFade(1f, 0.1f);
+                model.gameObject.transform.DOLocalMove(new Vector2(0, 0), 0.1f).SetUpdate(true);
+                model.gameObject.GetComponent<SpriteRenderer>().DOFade(1f, 0.1f).SetUpdate(true);
                 model.gameObject.SetActive(false);
             });
         }
@@ -72,9 +75,9 @@ namespace myengine.BlockPuzzle
             UnFlash();
             Sequence spinnySeq = DOTween.Sequence();
             spinnySeq.PrependInterval(0.05f * index);
-            Tween tween1 = model.gameObject.transform.DOLocalRotate(new Vector3(0, 0, 180f), 0.5f);
-            Tween tween2 = model.gameObject.transform.DOScale(0f, 0.5f);
-            Tween tween3 = model.gameObject.GetComponent<SpriteRenderer>().DOFade(0f, 0.5f);
+            Tween tween1 = model.gameObject.transform.DOLocalRotate(new Vector3(0, 0, 180f), 0.5f).SetUpdate(true);
+            Tween tween2 = model.gameObject.transform.DOScale(0f, 0.5f).SetUpdate(true);
+            Tween tween3 = model.gameObject.GetComponent<SpriteRenderer>().DOFade(0f, 0.5f).SetUpdate(true);
             spinnySeq.Append(tween1);
             spinnySeq.Join(tween2);
             spinnySeq.Join(tween3);
@@ -82,9 +85,35 @@ namespace myengine.BlockPuzzle
             fakeData = null;
             spinnySeq.AppendCallback(delegate
             {
-                model.gameObject.transform.rotation = Quaternion.identity;
-                model.gameObject.transform.DOScale(1f, 0.1f);
-                model.gameObject.GetComponent<SpriteRenderer>().DOFade(1f, 0.1f);
+                model.gameObject.transform.localRotation = Quaternion.identity;
+                model.gameObject.transform.DOScale(1f, 0.1f).SetUpdate(true);
+                model.gameObject.GetComponent<SpriteRenderer>().DOFade(1f, 0.1f).SetUpdate(true);
+                model.gameObject.SetActive(false);
+            });
+        }
+
+        //Unfin
+        public void ShatterFinish()
+        {
+            UnFlash();
+            _data = null;
+            fakeData = null;
+            Sequence shatterSeq = DOTween.Sequence();
+            float upValue = 0.25f;
+            float mixValue = Random.Range(-1f, 1f);
+            Tween tween1 = model.transform.DOLocalMove(new Vector2(mixValue, upValue), 0.25f);
+            Tween tween2 = model.transform.DOLocalRotate(new Vector3(0, 0, 180f), 0.75f);
+            Tween tween3 = model.transform.DOScale(new Vector2(0.5f, 0.5f), 0.5f);
+            //Tween tween4 = model.transform.DOLocalMove(new Vector2(Random.Range(-1f, 1f), -1f), 0.5f);
+            shatterSeq.Insert(0, tween1);
+            shatterSeq.Insert(0, tween2);
+            shatterSeq.Insert(1, tween3);
+            //shatterSeq.Insert(1, tween4);
+            shatterSeq.AppendCallback(delegate
+            {
+                model.transform.localPosition = inital_model_pos;
+                model.transform.localRotation = Quaternion.identity;
+                model.transform.localScale = new Vector2(1, 1);
                 model.gameObject.SetActive(false);
             });
         }
@@ -125,7 +154,7 @@ namespace myengine.BlockPuzzle
 
         public void Freeze()
         {
-            greyshit.GetComponent<SpriteRenderer>().DOFade(1f, 0.5f);
+            greyshit.GetComponent<SpriteRenderer>().DOFade(1f, 0.5f).SetUpdate(true);
         }
 
         // Start is called before the first frame update

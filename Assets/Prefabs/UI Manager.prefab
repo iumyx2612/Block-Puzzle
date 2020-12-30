@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6598698146168853178
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6598698146168853180}
+  - component: {fileID: 6598698146168853181}
+  m_Layer: 0
+  m_Name: UI Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6598698146168853180
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6598698146168853178}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6598698146168853181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6598698146168853178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69662cf708bdda74eb43485e7c155c08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameOverListen: {fileID: 11400000, guid: 5ae382e29019f1741bd9c4e5966f92bd, type: 2}
+  gameOverPanel: {fileID: 0}
+  isShopNeed: {fileID: 11400000, guid: ac2675681cf17e0449a6ec96fa288388, type: 2}
+  shopPanel: {fileID: 0}
+  rotateCounterTxt: {fileID: 0}
+  enableRotate: {fileID: 11400000, guid: ba0ea22233d374c42a933778cde6fd07, type: 2}
+  rotateCounter: {fileID: 11400000, guid: def12eabc6ece454388fa03f152e5f3d, type: 2}
+  rotate: {fileID: 11400000, guid: 7159c9d1b2956a244902cbe9db04f4bb, type: 2}
+  rotateBtnClick: {fileID: 11400000, guid: fbbe9efb3c849a543b34639f5ef3e1b7, type: 2}
+  replayListen: {fileID: 11400000, guid: e0643cc3f67f1af469e1b7065ddcc2d2, type: 2}
+  welldoneListen: {fileID: 11400000, guid: 56595dbc311c73e459598fec79d2dc60, type: 2}
+  welldonePanel: {fileID: 0}
+  pauseMenuListen: {fileID: 11400000, guid: 606b8ffb5047013408aaa1b9cbc3156d, type: 2}
+  pauseMenu: {fileID: 0}
+  musicBtn: {fileID: 0}
+  musicBtnListen: {fileID: 11400000, guid: c16f92f931312ac46a21daed1186c015, type: 2}
+  sfxBtn: {fileID: 0}
+  sfxBtnListen: {fileID: 11400000, guid: c6ae80a42ffafae429fe032b45332f24, type: 2}
+  sfxBtnImages:
+  - {fileID: 21300000, guid: 9df0b8e3853e57f438ea11e8dffe7c37, type: 3}
+  - {fileID: 21300000, guid: eb2a127a226c0684ca84679bd768b9de, type: 3}
+  vibrateBtn: {fileID: 0}
+  vibrateBtnListen: {fileID: 11400000, guid: 5be3f9dfb8c8d6147b939193da9f6923, type: 2}
+  vibrateBtnImages:
+  - {fileID: 21300000, guid: b270b81b6a6fc154d91c02817a0fccbf, type: 3}
+  - {fileID: 21300000, guid: 95f6ee77771790945a4dfd8c6096f851, type: 3}

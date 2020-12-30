@@ -29,11 +29,15 @@ namespace myengine.BlockPuzzle
         public IntVariable rotateCounter;
         public GameEvent rotate;
         private List<Vector2> initialPoints = new List<Vector2>();
+        private int rotateTimes = 0;
+        [SerializeField] private GameEvent rotateBtnClicked;
+        private bool isDisabled = false;
+
         // Start is called before the first frame update
 
         private void Awake()
         {
-            //LoadData(7);
+            //LoadData(22);
             for (int i = 0; i < preloadPieces; i++)
             {
                 GameObject newPiece = Instantiate(piece, transform);
@@ -44,6 +48,7 @@ namespace myengine.BlockPuzzle
         }
         void OnEnable()
         {
+            RotateBtnOnOff();
             for (int i = 0; i < points.Count; i++)
             {
                 pieces[i].transform.localPosition = pieceDistScale * (points[i] + offset);
@@ -58,7 +63,8 @@ namespace myengine.BlockPuzzle
                     activeChild++;
                 }
             }
-            enableRotate.AddListener(RotateBtnOnOff);        
+            enableRotate.AddListener(RotateBtnOnOff);
+            rotateBtnClicked.AddListener(Disable);
         }
 
         public void RotateBtnOnOff()
@@ -89,6 +95,8 @@ namespace myengine.BlockPuzzle
             activeChild = 0;
             transform.rotation = Quaternion.identity;
             enableRotate.RemoveListener(RotateBtnOnOff);
+            rotateBtnClicked.RemoveListener(Disable);
+            rotateTimes = 0;
         }
 
         // Update is called once per frame
@@ -111,27 +119,58 @@ namespace myengine.BlockPuzzle
 
         public void Rotate()
         {
-            rotateCounter.Value--;
-            rotate.Raise();
-            for (int i = 0; i < points.Count; i++)
+            if(possibleRotation > 1)
             {
-                points[i] = new Vector2(-points[i].y, points[i].x);
-            }
-            transform.Rotate(0, 0, 90);
-            int num_of_points_to_check = 0;
-            for (int i = 0; i < points.Count; i++)
-            {
-                if (points[i] == initialPoints[i])
+                rotateCounter.Value--;
+                rotateTimes++;
+                for (int i = 0; i < points.Count; i++)
                 {
-                    num_of_points_to_check++;
+                    points[i] = new Vector2(-points[i].y, points[i].x);
                 }
-            }
-            if(num_of_points_to_check == points.Count)
-            {
-                rotateCounter.Value = 3;
-            }
+                transform.Rotate(0, 0, 90);
+                int num_of_points_to_check = 0;
+                for (int i = 0; i < points.Count; i++)
+                {
+                    if (points[i] == initialPoints[i])
+                    {
+                        num_of_points_to_check++;
+                    }
+                }
+                if (num_of_points_to_check == points.Count)
+                {
+                    rotateCounter.Value += rotateTimes;
+                }
+            }            
         }
 
+        public void Disable()
+        {
+            if(!isDisabled)
+            {
+                isDisabled = true;
+                if (possibleRotation <= 1)
+                {
+                    foreach (GameObject piece in pieces)
+                    {
+                        if(piece.activeSelf)
+                        {
+                            piece.GetComponent<PieceDisplay>().LoadFakeData(dataList.pieceDataList[0]);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                isDisabled = false;
+                foreach (GameObject piece in pieces)
+                {
+                    if (piece.activeSelf)
+                    {
+                        piece.GetComponent<PieceDisplay>().LoadFakeData(dataList.pieceDataList[chosenColor]);
+                    }
+                }
+            }
+        }
     }
 
 }

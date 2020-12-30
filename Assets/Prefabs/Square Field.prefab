@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: ef7532a97bb390e47ac797b7abb2cda2, type: 3}
-  m_Color: {r: 0, g: 0.5754717, b: 0.18732524, a: 1}
+  m_Color: {r: 0, g: 0.33962262, b: 0.11177454, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -130,6 +130,7 @@ MonoBehaviour:
   fakeData: {fileID: 0}
   position: {x: 0, y: 0}
   flashbang: {fileID: 7439014344748877634}
+  shatterSpeed: 0
 --- !u!1001 &1920948714425630641
 PrefabInstance:
   m_ObjectHideFlags: 0
