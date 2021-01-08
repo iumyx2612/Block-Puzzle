@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
+using TMPro;
 
 namespace myengine.BlockPuzzle
 {
@@ -15,20 +17,19 @@ namespace myengine.BlockPuzzle
         private List<TileObject> tileList = new List<TileObject>();
         public float xSquareField;
         public float ySquareField;
-        public GameObject greenArea;
+        [SerializeField] private GameObject greenArea;
         [SerializeField] private Vector2 position;
         [SerializeField] private Vector2 basePosition;
-        [SerializeField] private float pieceDistScale;
 
-        public BlockDragGameEvent dragListen;
-        public BlockDragGameEvent placeListen;
+        [SerializeField] private BlockDragGameEvent dragListen;
+        [SerializeField] private BlockDragGameEvent placeListen;
 
-        public List<TileObject> tileToCheck = new List<TileObject>();
+        private List<TileObject> tileToCheck = new List<TileObject>();
         private GameObject oldTile;
         private GameObject curTile;
 
-        public IntVariable activeBlocks;
-        public GameEvent loadNextBlocks;
+        [SerializeField] private IntVariable activeBlocks;
+        [SerializeField] private GameEvent loadNextBlocks;
 
         private List<TileObject> rowTiles = new List<TileObject>();
         private List<TileObject> colTiles = new List<TileObject>();
@@ -40,11 +41,12 @@ namespace myengine.BlockPuzzle
         private bool hoverRowComplete = false;
         private bool hoverColComplete = false;
 
-        public GameObjectCollection remainBlocks;
-        public BoolVariable isGameOver;
+        [SerializeField] private GameObjectCollection remainBlocks;
+        [SerializeField] private BoolVariable isGameOver;
         private List<TileObject> remainingTile = new List<TileObject>();
-        public PieceDataList PieceDataList;
-        public GameEvent gameOverEvent;
+        private List<TileObject> usedTiles = new List<TileObject>();
+        [SerializeField] private PieceDataList PieceDataList;
+        [SerializeField] private GameEvent gameOverEvent;
         [SerializeField] private BoolVariable isShopNeed;
         [SerializeField] private GameEvent ShopNeed;
 
@@ -53,13 +55,19 @@ namespace myengine.BlockPuzzle
         {
             10, 30, 60, 100, 200
         };
-        public Text curScoreText;
+        [SerializeField] private Text curScoreText;
         public IntVariable curScore;
+        [SerializeField] private IntGameEvent scorePop;
+        [SerializeField] private TextMeshPro scorePopText;
+        private Vector2 scorePopPos;
 
         public Text highScoreText;
         public IntVariable highScore;
 
         public GameEvent welldoneGameEvent;
+
+        [SerializeField] private GameEvent rotate;
+        [SerializeField] private IntVariable rotateCounter;
 
         public GameEvent test;
 
@@ -70,6 +78,7 @@ namespace myengine.BlockPuzzle
             placeListen.AddListener(Place);
             highScore.Value = PlayerPrefs.GetInt("HighScore");
             highScoreText.text = highScore.Value.ToString();
+            scorePop.AddListener(ScorePop);
         }
 
         private void OnDisable()
@@ -78,6 +87,7 @@ namespace myengine.BlockPuzzle
             placeListen.RemoveListener(Place);
             isGameOver.Value = false;
             test.RemoveListener(Test);
+            scorePop.RemoveListener(ScorePop);
             curScore.Value = 0;
         }
         
@@ -244,6 +254,9 @@ namespace myengine.BlockPuzzle
                     tile.AddPieceData(drag.transform.GetChild(1).GetComponent<PieceDisplay>().data);
                     remainingTile.Remove(tile);
                 }
+                rotateCounter.Value -= drag.gameObject.GetComponent<BlockDisplay>().rotateTimes;
+                rotate.Raise();
+                scorePopPos = drag.endPos;
             }
             foreach (TileObject tile in tileToCheck)
             {
@@ -291,7 +304,8 @@ namespace myengine.BlockPuzzle
             ScoreCalculation(drag.gameObject.GetComponent<BlockDisplay>().activeChild);
             if (num_of_row_col > 0)
             {
-                ScoreCalculation(scoreSet[num_of_row_col - 1]);
+                ScoreCalculation(scoreSet[num_of_row_col - 1]);               
+                scorePop.Raise(scoreSet[num_of_row_col - 1]);
                 if (num_of_row_col >= 3)
                 {
                     welldoneGameEvent.Raise();
@@ -315,10 +329,10 @@ namespace myengine.BlockPuzzle
             {
                 Freeze();
                 AudioManager._instance.Play("Lose");
-                foreach (GameObject block in remainBlocks)
-                {
-                    block.GetComponent<BlockDrag>().enabled = false;
-                }
+                //foreach (GameObject block in remainBlocks)
+                //{
+                //    block.GetComponent<BlockDrag>().enabled = false;
+                //}
                 StartCoroutine(WaitTillGameOver());
             }
         }
@@ -466,6 +480,13 @@ namespace myengine.BlockPuzzle
                         remainingTile.Add(tileList[i]);
                     }
                 }
+                else
+                {
+                    if(!usedTiles.Contains(tileList[i]))
+                    {
+                        usedTiles.Add(tileList[i]);
+                    }
+                }
             }
         }
 
@@ -499,55 +520,53 @@ namespace myengine.BlockPuzzle
                         return false;
                     }
                 }
+                bool _break = false;
                 for (int i = 0; i < remainingTile.Count; i++)
                 {
+                    if(_break)
+                    {
+                        break;
+                    }
                     List<Vector2> fakePoints = block.GetComponent<BlockDisplay>().points;
-                    fakePoints = FakeRotate(fakePoints);
                     for (int j = 1; j < block.GetComponent<BlockDisplay>().possibleRotation; j++)
                     {
+                        fakePoints = FakeRotate(fakePoints);
                         tileToCheck.Clear();
                         tileToCheck.Add(remainingTile[i]);
                         if(Check(fakePoints, remainingTile[i]))
                         {
                             shopNeedCount++;
-                        }
-                    }
-                    if(shopNeedCount >= remainBlocks.Count)
-                    {
-                        if ((rowComplete || colComplete))
-                        {
-                            isShopNeed.Value = true;
-                            StartCoroutine(WaitTillShopNeeded());
-                            foreach (GameObject _block in remainBlocks)
-                            {
-                                _block.GetComponent<BlockDrag>().enabled = false;
-                            }
-                            return false;
-                        }
-                        else
-                        {
-                            isShopNeed.Value = true;
-                            ShopNeed.Raise();
-                            foreach (GameObject _block in remainBlocks)
-                            {
-                                _block.GetComponent<BlockDrag>().enabled = false;
-                            }
-                            return false;
+                            _break = true;
+                            break;
                         }
                     }
                 }
+                if (shopNeedCount >= remainBlocks.Count)
+                {
+                    if ((rowComplete || colComplete))
+                    {
+                        isShopNeed.Value = true;
+                        StartCoroutine(WaitTillShopNeeded());
+                        return false;
+                    }
+                    else
+                    {
+                        isShopNeed.Value = true;
+                        ShopNeed.Raise();
+                        return false;
+                    }
+                }
+
             }
             return true;
         }
 
         public void Freeze()
         {
-            for (int i = 0; i < tileList.Count; i++)
+            for (int i = 0; i < usedTiles.Count; i++)
             {
-                if(!tileList[i].isEmpty())
-                {
-                    tileList[i].Freeze();
-                }
+                float timer = 1f / usedTiles.Count;
+                usedTiles[i].Freeze(timer * i);
             }
         }
 
@@ -556,6 +575,27 @@ namespace myengine.BlockPuzzle
             curScore.Value += score;
             HighScoreCalculation();
             curScoreText.text = curScore.ToString();
+        }
+
+
+        public void ScorePop(int score)
+        {
+            scorePopText.text = score.ToString();
+            scorePopText.transform.position = scorePopPos;
+            scorePopText.gameObject.SetActive(true);
+            Sequence scorePopTextSeq = DOTween.Sequence();
+            Tween tween1 = scorePopText.transform.DOScale(1f, 1f);
+            Tween tween2 = scorePopText.DOFade(0f, 1f);
+            scorePopTextSeq.Append(tween1).Append(tween2);
+            scorePopTextSeq.AppendCallback(delegate
+            {
+                scorePopText.gameObject.SetActive(false);
+                scorePopText.transform.localScale = new Vector2(0f, 0f);
+                Color _base = scorePopText.color;
+                _base.a = 255f;
+                scorePopText.color = _base;
+                scorePopText.transform.localPosition = transform.position;
+            });
         }
 
         public void HighScoreCalculation()
@@ -600,9 +640,8 @@ namespace myengine.BlockPuzzle
         {
             List<int> testnumbers = new List<int>()
             {
-                1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,
-                31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,57,58,
-                59,60,61
+                1,3,5,7,10,12,14,16,17,19,21,23,26,28,30,32,
+                33,35,39,43,44,45,48,49,50,51,56
             };
             foreach (int num in testnumbers)
             {
@@ -611,7 +650,7 @@ namespace myengine.BlockPuzzle
         }
         IEnumerator WaitTillGameOver()
         { 
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1.5f);
             gameOverEvent.Raise();
         }
 

@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using ScriptableObjectArchitecture;
 using myengine.BlockPuzzle;
 using UnityEngine.UI;
+using DG.Tweening;
 
 namespace myengine.BlockPuzzle
 {
@@ -20,16 +21,15 @@ namespace myengine.BlockPuzzle
         private List<GameObject> pieces = new List<GameObject>();
         public GameObject piece;
         public PieceDataList dataList;
-        private int chosenColor;        
+        private int chosenColor;
 
         public int activeChild;
 
         public GameObject rotateBtn;
         public BoolVariable enableRotate;
         public IntVariable rotateCounter;
-        public GameEvent rotate;
         private List<Vector2> initialPoints = new List<Vector2>();
-        private int rotateTimes = 0;
+        [HideInInspector] public int rotateTimes = 0;
         [SerializeField] private GameEvent rotateBtnClicked;
         private bool isDisabled = false;
 
@@ -63,15 +63,29 @@ namespace myengine.BlockPuzzle
                     activeChild++;
                 }
             }
+            //if(enableRotate && possibleRotation <= 1)
+            //{
+            //    isDisabled = true;
+            //    foreach (GameObject piece in pieces)
+            //    {
+            //        if (piece.activeSelf)
+            //        {
+            //            piece.GetComponent<PieceDisplay>().LoadFakeData(dataList.pieceDataList[0]);
+            //        }
+            //    }
+            //}
             enableRotate.AddListener(RotateBtnOnOff);
-            rotateBtnClicked.AddListener(Disable);
+            rotateBtnClicked.AddListener(ToggleDisable);
         }
 
         public void RotateBtnOnOff()
         {
             if(enableRotate)
             {
-                rotateBtn.SetActive(true);
+                if (possibleRotation > 1)
+                {
+                    rotateBtn.SetActive(true);
+                }
             }
             else
             {
@@ -95,7 +109,7 @@ namespace myengine.BlockPuzzle
             activeChild = 0;
             transform.rotation = Quaternion.identity;
             enableRotate.RemoveListener(RotateBtnOnOff);
-            rotateBtnClicked.RemoveListener(Disable);
+            rotateBtnClicked.RemoveListener(ToggleDisable);
             rotateTimes = 0;
         }
 
@@ -121,56 +135,80 @@ namespace myengine.BlockPuzzle
         {
             if(possibleRotation > 1)
             {
-                rotateCounter.Value--;
-                rotateTimes++;
                 for (int i = 0; i < points.Count; i++)
                 {
                     points[i] = new Vector2(-points[i].y, points[i].x);
                 }
                 transform.Rotate(0, 0, 90);
-                int num_of_points_to_check = 0;
-                for (int i = 0; i < points.Count; i++)
+            }
+            int point_to_check = 0;
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (points[i] != initialPoints[i])
                 {
-                    if (points[i] == initialPoints[i])
-                    {
-                        num_of_points_to_check++;
-                    }
+                    point_to_check++;
                 }
-                if (num_of_points_to_check == points.Count)
+                if(point_to_check == points.Count - 1)
                 {
-                    rotateCounter.Value += rotateTimes;
+                    rotateTimes = 1;
                 }
-            }            
+            }
+            point_to_check = 0;
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (points[i] == initialPoints[i])
+                {
+                    point_to_check++;
+                }
+                if(point_to_check == points.Count)
+                {
+                    rotateTimes = 0;
+                }
+            }
         }
 
-        public void Disable()
+        public void ToggleDisable()
         {
-            if(!isDisabled)
+            //if (possibleRotation <= 1 && !isDisabled)
+            //{
+            //    isDisabled = true;
+            //    foreach (GameObject piece in pieces)
+            //    {
+            //        if (piece.activeSelf)
+            //        {
+            //            piece.GetComponent<PieceDisplay>().LoadFakeData(dataList.pieceDataList[0]);
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    isDisabled = false;
+            //    foreach (GameObject piece in pieces)
+            //    {
+            //        if (piece.activeSelf)
+            //        {
+            //            piece.GetComponent<PieceDisplay>().LoadFakeData(dataList.pieceDataList[chosenColor]);
+            //        }
+            //    }
+            //}
+            if (!enableRotate)
             {
-                isDisabled = true;
-                if (possibleRotation <= 1)
+                for (int i = 0; i < points.Count; i++)
                 {
-                    foreach (GameObject piece in pieces)
-                    {
-                        if(piece.activeSelf)
-                        {
-                            piece.GetComponent<PieceDisplay>().LoadFakeData(dataList.pieceDataList[0]);
-                        }
-                    }
+                    points[i] = initialPoints[i];
                 }
+                transform.rotation = Quaternion.identity;
+                rotateTimes = 0;
             }
-            else
+            for (int i = 0; i < points.Count; i++)
             {
-                isDisabled = false;
-                foreach (GameObject piece in pieces)
+                if (points[i] != initialPoints[i])
                 {
-                    if (piece.activeSelf)
-                    {
-                        piece.GetComponent<PieceDisplay>().LoadFakeData(dataList.pieceDataList[chosenColor]);
-                    }
+                    rotateTimes = 1;
                 }
             }
         }
+
     }
 
 }

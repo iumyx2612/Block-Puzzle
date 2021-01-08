@@ -256,7 +256,7 @@ MonoBehaviour:
   rotateBtn: {fileID: 987463430441283599}
   enableRotate: {fileID: 11400000, guid: ba0ea22233d374c42a933778cde6fd07, type: 2}
   rotateCounter: {fileID: 11400000, guid: def12eabc6ece454388fa03f152e5f3d, type: 2}
-  rotate: {fileID: 11400000, guid: 7159c9d1b2956a244902cbe9db04f4bb, type: 2}
+  rotateTimes: 0
   rotateBtnClicked: {fileID: 11400000, guid: fbbe9efb3c849a543b34639f5ef3e1b7, type: 2}
 --- !u!114 &-5686473859066925407
 MonoBehaviour:
@@ -280,5 +280,6 @@ MonoBehaviour:
   lastPos: {x: 0, y: 0}
   hovering: 0
   check: 0
+  endPos: {x: 0, y: 0}
   rotateAble: {fileID: 11400000, guid: ba0ea22233d374c42a933778cde6fd07, type: 2}
   rotateChooser: {fileID: 11400000, guid: f7beb5aee697aaf4d88d8d5a0e5be898, type: 2}

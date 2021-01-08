@@ -18,4 +18,4 @@ MonoBehaviour:
   - {x: 0, y: -2}
   - {x: 1, y: 0}
   offset: {x: 0, y: 1}
-  possibleRotation: 2
+  possibleRotation: 4

@@ -23,6 +23,7 @@ namespace myengine.BlockPuzzle
         public bool hovering = false;
         public bool check = false;
         private Vector2 rawPos = Vector2.zero;
+        public Vector2 endPos;
 
 
         public BoolVariable rotateAble;
@@ -37,65 +38,69 @@ namespace myengine.BlockPuzzle
             TouchPhase touch = InputManager.Touch;
             if (touch.touchStarted)
             {
-                switch (touch.touchPhase)
+                if(Time.timeScale != 0f)
                 {
-                    case UnityEngine.TouchPhase.Began:
-                        rawPos = touch.pos;
-                        if (gameObject.GetComponent<BoxCollider2D>().bounds.Contains(touch.pos))
-                        {
-                            isSelecting = true;
-                            onPoint = true;
-                        }
-                        break;
-                    case UnityEngine.TouchPhase.Moved:
+                    switch (touch.touchPhase)
+                    {
+                        case UnityEngine.TouchPhase.Began:
+                            rawPos = touch.pos;
+                            if (gameObject.GetComponent<BoxCollider2D>().bounds.Contains(touch.pos))
+                            {
+                                isSelecting = true;
+                                onPoint = true;
+                            }
+                            break;
+                        case UnityEngine.TouchPhase.Moved:
 
-                        if(!isSelecting)
-                        {
-                            break;
-                        }
-                        if (/*gameObject.GetComponent<BoxCollider2D>().bounds.Contains(touch.pos) && */onPoint)
+                            if (!isSelecting)
+                            {
+                                break;
+                            }
+                            if (/*gameObject.GetComponent<BoxCollider2D>().bounds.Contains(touch.pos) && */onPoint)
                             //k để bounds.Contain vì khi di quá nhanh thì touch.pos có thể nằm ngoài collider
-                        {
-                            gameObject.transform.localScale = dragScaleSize;
-                            transform.position = touch.pos;
-                            curPos = transform.position;
-                            drag.Raise(this);
-                        }
-                        break;
-                    case UnityEngine.TouchPhase.Ended:
-                        if (Vector2.Distance(rawPos, touch.pos) > 0.2f)
-                        {
-                            rotateChooser.Value = false;
-                        }
-                        else
-                        {
-                            rotateChooser.Value = true;
-                        }
-                        if(rotateChooser && rotateAble && onPoint)
-                        {
-                            gameObject.GetComponent<BlockDisplay>().Rotate();
-                        }
-                        if (!isSelecting)
-                        {
+                            {
+                                gameObject.transform.localScale = dragScaleSize;
+                                transform.position = touch.pos;
+                                curPos = transform.position;
+                                drag.Raise(this);
+                            }
                             break;
-                        }
-                        if (!check)
-                        {
-                            transform.DOMove(oldPos, 0.2f);
-                            //transform.position = oldPos;
-                        }
-                        else
-                        {
-                            //gameObject.SetActive(false);
-                            gameObject.transform.position = new Vector2(999, 999);
-                            place.Raise(this);
-                        }
-                        isSelecting = false;
-                        hovering = false;
-                        onPoint = false;
-                        gameObject.transform.localScale = defaultScaleSize;
-                        check = false;
-                        break;
+                        case UnityEngine.TouchPhase.Ended:
+                            if (Vector2.Distance(rawPos, touch.pos) > 0.2f)
+                            {
+                                rotateChooser.Value = false;
+                            }
+                            else
+                            {
+                                rotateChooser.Value = true;
+                            }
+                            if (rotateChooser && rotateAble && onPoint)
+                            {
+                                gameObject.GetComponent<BlockDisplay>().Rotate();
+                            }
+                            if (!isSelecting)
+                            {
+                                break;
+                            }
+                            if (!check)
+                            {
+                                transform.DOMove(oldPos, 0.2f);
+                                //transform.position = oldPos;
+                            }
+                            else
+                            {
+                                endPos = transform.position;
+                                //gameObject.SetActive(false);
+                                gameObject.transform.position = new Vector2(999, 999);
+                                place.Raise(this);
+                            }
+                            isSelecting = false;
+                            hovering = false;
+                            onPoint = false;
+                            gameObject.transform.localScale = defaultScaleSize;
+                            check = false;
+                            break;
+                    }
                 }
             }
         }

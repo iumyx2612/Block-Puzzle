@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using ScriptableObjectArchitecture;
 using DG.Tweening;
@@ -36,14 +37,22 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private GameObject musicBtn;
     [SerializeField] private GameEvent musicBtnListen;
+    [SerializeField] private Sprite[] musicBtnImages;
 
     [SerializeField] private GameObject sfxBtn;
     [SerializeField] private GameEvent sfxBtnListen;
-    [SerializeField] private Sprite[] sfxBtnImages;
 
     [SerializeField] private GameObject vibrateBtn;
     [SerializeField] private GameEvent vibrateBtnListen;
     [SerializeField] private Sprite[] vibrateBtnImages;
+
+    [SerializeField] private GameObject havingFunPanel;
+    [SerializeField] private GameEvent havingFunListen;
+
+    [SerializeField] private GameEvent closeBtnClick;
+
+    [SerializeField] private GameEvent btnClick;
+
 
     private void OnEnable()
     {
@@ -57,6 +66,9 @@ public class UIManager : MonoBehaviour
         sfxBtnListen.AddListener(SfxBtn);
         vibrateBtnListen.AddListener(VibrateBtn);
         replayListen.AddListener(Replay);
+
+        closeBtnClick.AddListener(CloseBtn);
+        btnClick.AddListener(BtnClick);
         Time.timeScale = 1f;
     }
 
@@ -71,6 +83,9 @@ public class UIManager : MonoBehaviour
         sfxBtnListen.RemoveListener(SfxBtn);
         vibrateBtnListen.RemoveListener(VibrateBtn);
         replayListen.RemoveListener(Replay);
+
+        closeBtnClick.RemoveListener(CloseBtn);
+        btnClick.RemoveListener(BtnClick);
         rotateCounter.Value = 3;
     }
 
@@ -86,6 +101,11 @@ public class UIManager : MonoBehaviour
     {
         shopPanel.SetActive(true);
         Time.timeScale = 0f;
+    }
+
+    public void CloseBtn()
+    {
+        Time.timeScale = 1f;
     }
 
     public void WellDone()
@@ -106,19 +126,35 @@ public class UIManager : MonoBehaviour
     }
 
     public void MusicBtn()
-    {
-        musicBtn.transform.GetChild(0).gameObject.SetActive(!musicBtn.transform.GetChild(0).gameObject.activeSelf);
+    {        
+        if (musicBtn.transform.GetChild(0).GetComponent<Image>().sprite != musicBtnImages[0])
+        {
+            musicBtn.transform.GetChild(0).GetComponent<Image>().sprite = musicBtnImages[0];
+            AudioManager._instance.UnMute("Theme");
+        }
+        else
+        {
+            musicBtn.transform.GetChild(0).GetComponent<Image>().sprite = musicBtnImages[1];
+            AudioManager._instance.Mute("Theme");
+        }
     }
 
     public void SfxBtn()
     {
-        if(sfxBtn.transform.GetChild(0).GetComponent<Image>().sprite != sfxBtnImages[0])
+        sfxBtn.transform.GetChild(0).gameObject.SetActive(!sfxBtn.transform.GetChild(0).gameObject.activeSelf);
+        if(sfxBtn.transform.GetChild(0).gameObject.activeSelf)
         {
-            sfxBtn.transform.GetChild(0).GetComponent<Image>().sprite = sfxBtnImages[0];
+            AudioManager._instance.Mute("One");
+            AudioManager._instance.Mute("Lose");
+            AudioManager._instance.Mute("Place");
+            AudioManager._instance.Mute("UIClick");
         }
         else
         {
-            sfxBtn.transform.GetChild(0).GetComponent<Image>().sprite = sfxBtnImages[1];
+            AudioManager._instance.UnMute("One");
+            AudioManager._instance.UnMute("Lose");
+            AudioManager._instance.UnMute("Place");
+            AudioManager._instance.UnMute("UIClick");
         }
     }
 
@@ -134,7 +170,7 @@ public class UIManager : MonoBehaviour
             vibrateBtn.transform.GetChild(0).gameObject.SetActive(true);
             vibrateBtn.transform.GetChild(1).gameObject.SetActive(false);
         }
-    }
+    }    
 
     //Khi replay k nên load lại Scene vì rất tốn tài nguyên -> Set lại toàn bộ thông tin và deact những thứ cần deact
     public void Replay()
@@ -151,6 +187,10 @@ public class UIManager : MonoBehaviour
     {
         enableRotate.Value = !enableRotate.Value;
         rotateBtnClick.Raise();
-        rotate.Raise();
+    }
+
+    public void BtnClick()
+    {
+        AudioManager._instance.Play("UIClick");
     }
 }

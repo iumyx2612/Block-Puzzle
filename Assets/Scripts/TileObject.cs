@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 
 namespace myengine.BlockPuzzle
@@ -10,8 +11,8 @@ namespace myengine.BlockPuzzle
         public PieceDisplay model;
         private Vector2 inital_model_pos;
         public GameObject greyshit;
-        public PieceData _data;
-        public PieceData fakeData;
+        [HideInInspector] public PieceData _data;
+        [HideInInspector] public PieceData fakeData;
         public Vector2 position;
         public GameObject flashbang;
         [SerializeField] private float shatterSpeed;
@@ -152,9 +153,13 @@ namespace myengine.BlockPuzzle
             return false;
         }
 
-        public void Freeze()
+        public void Freeze(float delayTime)
         {
-            greyshit.GetComponent<SpriteRenderer>().DOFade(1f, 0.5f).SetUpdate(true);
+            Sequence freezeSeq = DOTween.Sequence();
+            freezeSeq.PrependInterval(delayTime);
+            Debug.Log(delayTime);
+            Tween tween1 = greyshit.GetComponent<SpriteRenderer>().DOFade(1f, 0.5f).SetUpdate(true);
+            freezeSeq.Append(tween1);
         }
 
         // Start is called before the first frame update

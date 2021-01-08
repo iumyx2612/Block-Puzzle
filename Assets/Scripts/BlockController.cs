@@ -25,6 +25,8 @@ namespace myengine.BlockPuzzle
         [SerializeField] private GameObjectCollection remainBlocks;
         [SerializeField] private BoolVariable isGameOver;
 
+        [SerializeField] private BoolVariable enableRotate;
+
         private void OnEnable()
         {
             nextpuzzle.AddListener(LoadBlockList);
@@ -35,6 +37,7 @@ namespace myengine.BlockPuzzle
             activeBlocks.Value = 0;
             blocks.Clear();
             remainBlocks.Clear();
+            enableRotate.Value = false;
         }
 
         private void Awake()
@@ -114,6 +117,17 @@ namespace myengine.BlockPuzzle
                         }
                     }
                     randomBlock = Random.Range(0, chosenGroup.blockDatas.Count);
+                    //#region test
+                    //randomBlock = Random.Range(0, 2);
+                    //if(randomBlock == 1)
+                    //{
+                    //    randomBlock = 11;
+                    //}
+                    //if(randomBlock == 0)
+                    //{
+                    //    randomBlock = 13;
+                    //}
+                    //#endregion
                     blocks[i].GetComponent<BlockDisplay>().chosenGroup = chosenGroup;
                     blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
                     blocks[i].SetActive(true);
