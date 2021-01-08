@@ -33,6 +33,8 @@ namespace myengine.BlockPuzzle
         [SerializeField] private GameEvent rotateBtnClicked;
         private bool isDisabled = false;
 
+        public bool state;
+
         // Start is called before the first frame update
 
         private void Awake()
@@ -205,6 +207,24 @@ namespace myengine.BlockPuzzle
                 if (points[i] != initialPoints[i])
                 {
                     rotateTimes = 1;
+                }
+            }
+        }
+        
+        public void StateToggle()
+        {
+            if(!state)
+            {
+                for (int i = 0; i < points.Count; i++)
+                {
+                    pieces[i].GetComponent<PieceDisplay>().LoadFakeData(dataList.pieceDataList[0]);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < points.Count; i++)
+                {
+                    pieces[i].GetComponent<PieceDisplay>().LoadFakeData(dataList.pieceDataList[chosenColor]);
                 }
             }
         }

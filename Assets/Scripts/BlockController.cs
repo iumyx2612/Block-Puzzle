@@ -75,7 +75,7 @@ namespace myengine.BlockPuzzle
                 //    randomBlock = Random.Range(12, 13);
                 //}
                 //#endregion
-                randomBlock = Random.Range(0, chosenGroup.blockDatas.Count);
+                randomBlock = Random.Range(0, 1);
                 blocks[i].GetComponent<BlockDisplay>().chosenGroup = chosenGroup;
                 blocks[i].GetComponent<BlockDisplay>().LoadData(randomBlock);
                 blocks[i].SetActive(true);
@@ -116,7 +116,7 @@ namespace myengine.BlockPuzzle
                             break;
                         }
                     }
-                    randomBlock = Random.Range(0, chosenGroup.blockDatas.Count);
+                    randomBlock = Random.Range(11, 12);
                     //#region test
                     //randomBlock = Random.Range(0, 2);
                     //if(randomBlock == 1)

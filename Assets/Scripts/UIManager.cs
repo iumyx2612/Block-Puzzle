@@ -14,7 +14,6 @@ public class UIManager : MonoBehaviour
     public GameEvent gameOverListen;
     public GameObject gameOverPanel;
     [SerializeField] private GameEvent shopNeed;
-    [SerializeField] private BoolVariable isShopNeed;
     [SerializeField] private GameObject shopPanel;
     [SerializeField] private Text gameOverCurScore;
     [SerializeField] private Text gameOverBestScore;
@@ -47,12 +46,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Sprite[] vibrateBtnImages;
 
     [SerializeField] private GameObject havingFunPanel;
-    [SerializeField] private GameEvent havingFunListen;
 
     [SerializeField] private GameEvent closeBtnClick;
 
     [SerializeField] private GameEvent btnClick;
 
+    [SerializeField] private IntGameEvent rotateBuy;
 
     private void OnEnable()
     {
@@ -66,10 +65,12 @@ public class UIManager : MonoBehaviour
         sfxBtnListen.AddListener(SfxBtn);
         vibrateBtnListen.AddListener(VibrateBtn);
         replayListen.AddListener(Replay);
+        rotateBuy.AddListener(RotateBuy);
 
         closeBtnClick.AddListener(CloseBtn);
         btnClick.AddListener(BtnClick);
         Time.timeScale = 1f;
+        rotateCounterTxt.text = rotateCounter.Value.ToString();
     }
 
     private void OnDisable()
@@ -83,10 +84,11 @@ public class UIManager : MonoBehaviour
         sfxBtnListen.RemoveListener(SfxBtn);
         vibrateBtnListen.RemoveListener(VibrateBtn);
         replayListen.RemoveListener(Replay);
+        rotateBuy.RemoveListener(RotateBuy);
 
         closeBtnClick.RemoveListener(CloseBtn);
         btnClick.RemoveListener(BtnClick);
-        rotateCounter.Value = 3;
+        //rotateCounter.Value = 3;
     }
 
     public void GameOver()
@@ -148,6 +150,7 @@ public class UIManager : MonoBehaviour
             AudioManager._instance.Mute("Lose");
             AudioManager._instance.Mute("Place");
             AudioManager._instance.Mute("UIClick");
+            AudioManager._instance.Mute("Multiple");
         }
         else
         {
@@ -155,6 +158,7 @@ public class UIManager : MonoBehaviour
             AudioManager._instance.UnMute("Lose");
             AudioManager._instance.UnMute("Place");
             AudioManager._instance.UnMute("UIClick");
+            AudioManager._instance.UnMute("Multiple");
         }
     }
 
@@ -183,8 +187,19 @@ public class UIManager : MonoBehaviour
         rotateCounterTxt.text = rotateCounter.Value.ToString();
     }
 
+    public void RotateBuy(int counter)
+    {
+        rotateCounter.Value += counter;
+        RotateCounter();
+    }
+
     public void Toggle()
     {
+        if(rotateCounter.Value <= 0)
+        {
+            ShopNeed();
+            return;
+        }
         enableRotate.Value = !enableRotate.Value;
         rotateBtnClick.Raise();
     }

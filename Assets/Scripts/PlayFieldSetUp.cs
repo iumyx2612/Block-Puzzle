@@ -58,7 +58,8 @@ namespace myengine.BlockPuzzle
         [SerializeField] private Text curScoreText;
         public IntVariable curScore;
         [SerializeField] private IntGameEvent scorePop;
-        [SerializeField] private TextMeshPro scorePopText;
+        ///*[SerializeField] */private TextMeshPro scorePopText;
+        [SerializeField] private TextMeshPro[] scorePopContainer;
         private Vector2 scorePopPos;
 
         public Text highScoreText;
@@ -68,6 +69,8 @@ namespace myengine.BlockPuzzle
 
         [SerializeField] private GameEvent rotate;
         [SerializeField] private IntVariable rotateCounter;
+        [SerializeField] private BoolVariable enableRotate;
+        [SerializeField] private GameEvent rotateBtnClick;
 
         public GameEvent test;
 
@@ -256,6 +259,11 @@ namespace myengine.BlockPuzzle
                 }
                 rotateCounter.Value -= drag.gameObject.GetComponent<BlockDisplay>().rotateTimes;
                 rotate.Raise();
+                if(rotateCounter.Value <= 0)
+                {
+                    enableRotate.Value = false;
+                    rotateBtnClick.Raise();
+                }
                 scorePopPos = drag.endPos;
             }
             foreach (TileObject tile in tileToCheck)
@@ -301,11 +309,15 @@ namespace myengine.BlockPuzzle
                     }
                 }
             }
-            ScoreCalculation(drag.gameObject.GetComponent<BlockDisplay>().activeChild);
+            ScoreCalculation(drag.gameObject.GetComponent<BlockDisplay>().activeChild - 1);
+            if(!rowComplete && !colComplete)
+            {
+                scorePop.Raise(drag.gameObject.GetComponent<BlockDisplay>().activeChild - 1);
+            }
             if (num_of_row_col > 0)
             {
                 ScoreCalculation(scoreSet[num_of_row_col - 1]);               
-                scorePop.Raise(scoreSet[num_of_row_col - 1]);
+                scorePop.Raise(scoreSet[num_of_row_col - 1] + drag.gameObject.GetComponent<BlockDisplay>().activeChild - 1);
                 if (num_of_row_col >= 3)
                 {
                     welldoneGameEvent.Raise();
@@ -471,6 +483,7 @@ namespace myengine.BlockPuzzle
 
         public void RemainingTiles()
         {
+            usedTiles.Clear();
             for (int i = 0; i < tileList.Count; i++)
             {
                 if(tileList[i].isEmpty())
@@ -506,10 +519,10 @@ namespace myengine.BlockPuzzle
             RemainingTiles();
             foreach (GameObject block in remainBlocks)
             {
-                if (remainingTile.Count < block.GetComponent<BlockDisplay>().activeChild)
-                {
-                    return true;
-                }
+                //if (remainingTile.Count < block.GetComponent<BlockDisplay>().activeChild)
+                //{
+                //    return true;
+                //}
                 List<Vector2> possible_points_of_block = new List<Vector2>();
                 for (int i = 0; i < remainingTile.Count; i++)
                 {
@@ -517,9 +530,16 @@ namespace myengine.BlockPuzzle
                     tileToCheck.Add(remainingTile[i]);
                     if (Check(block.GetComponent<BlockDisplay>().points, remainingTile[i]))
                     {
+                        if(!block.GetComponent<BlockDisplay>().state)
+                        {
+                            block.GetComponent<BlockDisplay>().state = true;
+                            block.GetComponent<BlockDisplay>().StateToggle();
+                        }
                         return false;
                     }
                 }
+                block.GetComponent<BlockDisplay>().state = false;
+                block.GetComponent<BlockDisplay>().StateToggle();
                 bool _break = false;
                 for (int i = 0; i < remainingTile.Count; i++)
                 {
@@ -576,26 +596,34 @@ namespace myengine.BlockPuzzle
             HighScoreCalculation();
             curScoreText.text = curScore.ToString();
         }
-
-
+        
         public void ScorePop(int score)
         {
-            scorePopText.text = score.ToString();
-            scorePopText.transform.position = scorePopPos;
-            scorePopText.gameObject.SetActive(true);
-            Sequence scorePopTextSeq = DOTween.Sequence();
-            Tween tween1 = scorePopText.transform.DOScale(1f, 1f);
-            Tween tween2 = scorePopText.DOFade(0f, 1f);
-            scorePopTextSeq.Append(tween1).Append(tween2);
-            scorePopTextSeq.AppendCallback(delegate
+            for (int i = 0; i < scorePopContainer.Length; i++)
             {
-                scorePopText.gameObject.SetActive(false);
-                scorePopText.transform.localScale = new Vector2(0f, 0f);
-                Color _base = scorePopText.color;
-                _base.a = 255f;
-                scorePopText.color = _base;
-                scorePopText.transform.localPosition = transform.position;
-            });
+                if(!scorePopContainer[i].gameObject.activeSelf)
+                {
+                    TextMeshPro scorePopText;
+                    scorePopText = scorePopContainer[i];
+                    scorePopText.text = "+" + score.ToString();
+                    scorePopText.transform.position = scorePopPos;
+                    scorePopText.gameObject.SetActive(true);
+                    Sequence scorePopTextSeq = DOTween.Sequence();
+                    Tween tween1 = scorePopText.transform.DOLocalMove(scorePopPos + new Vector2(0, 1f), 0.5f);
+                    Tween tween2 = scorePopText.DOFade(0f, 0.5f);
+                    scorePopTextSeq.Append(tween1).Append(tween2);
+                    scorePopTextSeq.AppendCallback(delegate
+                    {
+                        scorePopText.gameObject.SetActive(false);
+                        //scorePopText.transform.localScale = new Vector2(0f, 0f);
+                        Color _base = scorePopText.color;
+                        _base.a = 1;
+                        scorePopText.color = _base;
+                        scorePopText.transform.localPosition = transform.position;
+                    });
+                    break;
+                }                
+            }            
         }
 
         public void HighScoreCalculation()
@@ -640,8 +668,8 @@ namespace myengine.BlockPuzzle
         {
             List<int> testnumbers = new List<int>()
             {
-                1,3,5,7,10,12,14,16,17,19,21,23,26,28,30,32,
-                33,35,39,43,44,45,48,49,50,51,56
+                1,3,5,8,10,11,12,14,16,17,19,21,23,24,26,28,30,32,
+                33,34,35,37,39,42,43,44,45,46,50,52,53,54,55,57,58,59,60,61,62
             };
             foreach (int num in testnumbers)
             {
